@@ -1,0 +1,27 @@
+memory_in_gb		1
+queue			qfast
+nodes			5
+walltime		00:59:00
+timesleep		2.0
+
+
+foldername_base		 s12
+foldername_new		 p11
+
+
+calculus		NO
+statistics		NO
+new_mol_calculus	NO
+new_mol_statistics	YES
+
+---GAUSSIAN OPT---
+# wB97XD 6-311+G(2d,p) OPT  
+---GAUSSIAN OPT---
+
+
+---GAUSSIAN NMR---
+# M11 6-311+G(2d,p)  OPT  
+---GAUSSIAN NMR---
+
+
+sequential 
