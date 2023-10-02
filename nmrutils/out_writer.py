@@ -47,10 +47,10 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
     # print(os.getcwd())
     kop=str(keys[0]).split("_")
     if len(kop)==3 :
-        gd=str(kk[2])
+        gd=str(kop[2])
     else: 
         gd="No dispersion added"
-    opt=str(kk[0])+"/"+str(kk[1])
+    opt=str(kop[0])+"/"+str(kop[1])
     nmr=str(keys[1])
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
