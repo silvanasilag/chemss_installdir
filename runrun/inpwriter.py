@@ -114,7 +114,7 @@ def inp_pbs_writer(path,xyzpath,chkp,nmr,opt):
                 original = str(chks+"/"+name+".chk")
                 target =str(path+"/"+name+".chk")
                 shutil.copyfile(original, target)
-            f==2:  
+            if f==2:  
                 for ix in range(len(nmr)):
                     if ix == 0:out.write('%s  Geom=Check Guess=Read \n' % nmr[ix])
                     else: out.write('%s \n' % nmr[ix])
