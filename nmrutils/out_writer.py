@@ -50,7 +50,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
         gd=str(kk[2])
     else: 
         gd="No dispersion added"
-    opt=str(kk[0])+"/"str(kk[1])
+    opt=str(kk[0])+"/"+str(kk[1])
     nmr=str(keys[1])
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
@@ -66,7 +66,6 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
                         "RMSD C13" :[round(data_c.rmsd,4)],
                         "R^2 C13" :[round(data_c.r2,4)],
                         })
-
     if os.path.isfile(tbl_compf)== True:
         df = pd.read_csv (tbl_compf)
         # df=df.drop(['Unnamed: 0'], axis=1)
