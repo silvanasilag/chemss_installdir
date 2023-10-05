@@ -11,6 +11,8 @@ import glob
 import time
 import shutil
 
+print("test2")
+
 from nmrutils.getbilparam     import get_a_str, get_a_int, get_a_float
 # from nmrutils.regression      import regression
 

@@ -53,7 +53,7 @@ def inp_pbs_writer(path,xyzpath,chkp,nmr,opt):
     optk=key_norm(opt[0],"OPT")
     optk_l=optk.split("_")
     if len(opt)==1 and os.path.exists(chkp+"/"+str(optk)) == True : 
-        f=0
+        f=2
         chks= chkp+"/"+str(optk)
         print("1")
     elif len(opt)==1 and len(optk_l)==3 and os.path.exists(chkp+"/"+str(optk_l[0])+"_"+str(optk_l[1])) == True :
@@ -103,6 +103,18 @@ def inp_pbs_writer(path,xyzpath,chkp,nmr,opt):
                 out.write('%s \n'%npro)
                 out.write('%s' %chk)
                 out.write('%s \n' %name)
+                for ix in range(len(nmr)):
+                    if ix == 0:out.write('%s  Geom=Check Guess=Read \n' % nmr[ix])
+                    else: out.write('%s \n' % nmr[ix])
+                out.write('       \n')
+                out.write(' TMS NMR        \n')
+                out.write('       \n')
+                out.write('0 1\n')
+                out.write("       \n")
+                original = str(chks+"/"+name+".chk")
+                target =str(path+"/"+name+".chk")
+                shutil.copyfile(original, target)
+            if f==2:  
                 for ix in range(len(nmr)):
                     if ix == 0:out.write('%s  Geom=Check Guess=Read \n' % nmr[ix])
                     else: out.write('%s \n' % nmr[ix])

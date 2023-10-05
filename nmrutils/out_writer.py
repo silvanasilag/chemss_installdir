@@ -43,16 +43,14 @@ nproc = get_a_int('nodes',4) #
 #--------------------------------------------------- 
 
 def comp_table(tbl_comp,data_c,data_h,keys,path):
-    f=0
     os.chdir("..")
     # print(os.getcwd())
-    if "_G" in str(keys[0]): 
-        f=1
-        opt=str(keys[0]).split("_")[0]
-        gd=str(keys[0]).split("_")[1]
+    kop=str(keys[0]).split("_")
+    if len(kop)==3 :
+        gd=str(kop[2])
     else: 
         gd="No dispersion added"
-        opt=str(keys[0])
+    opt=str(kop[0])+"/"+str(kop[1])
     nmr=str(keys[1])
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
@@ -68,7 +66,6 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
                         "RMSD C13" :[round(data_c.rmsd,4)],
                         "R^2 C13" :[round(data_c.r2,4)],
                         })
-
     if os.path.isfile(tbl_compf)== True:
         df = pd.read_csv (tbl_compf)
         # df=df.drop(['Unnamed: 0'], axis=1)

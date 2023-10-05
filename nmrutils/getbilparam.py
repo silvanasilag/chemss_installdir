@@ -97,7 +97,7 @@ def key_norm(key,fun):
     pt=re.compile(f'(?i){fun_n}')
     w_key=pt.split(key)[0]
     w_key=w_key.strip()
-    w_key=w_key.replace(" ","/")
+    w_key=w_key.replace(" ","_")
     if "empiricaldispersion" in key.lower() :
       key=key.replace(" =","=")
       key=key.replace("= ","=")
