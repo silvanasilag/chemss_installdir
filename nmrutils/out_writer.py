@@ -46,7 +46,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
     f=0
     os.chdir("..")
     # print(os.getcwd())
-    if "_D" in str(keys[0]): 
+    if "_G" in str(keys[0]): 
         f=1
         opt=str(keys[0]).split("_")[0]
         gd=str(keys[0]).split("_")[1]

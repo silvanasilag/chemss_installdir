@@ -21,7 +21,7 @@ from nmrutils.get_geometry    import get_geo, write_xyz
 from nmrutils.getbilparam     import read_block_of_inp
 from runrun.chemssinput_writer import chemss_inp,chemssinp_edit
 
-chms_path= "/Users/silvana/installdir/chemss_install/dataset" #path de la base de datos del xyz el dnmr
+chms_path= "/Users/silvana/installdir/chemss_installdir/dataset" #path de la base de datos del xyz el dnmr
 work_dir=str(os.getcwdb()) #path de la carpeta desde donde se ejecuta
 work_dir=work_dir.replace("b'","'")
 work_dir=work_dir.strip("'")
@@ -135,13 +135,15 @@ def CHESMS():
         falla,error,opt,nmr = terminacion(path2)
         data = molecules_data(path,dnmr)
         data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
-        key_opt=out_w(path,data,data2,tbl_comp)
+        key_opt=out_w(path,data,[],"-")
         key_opt_n=out_w(path2,data,data2,tbl_comp)
+        """
         if key_opt != key_opt_n : 
             print("Not the same level of theory")
             print(path+"    :   "+key_opt)
             print(path2+"   :  "+key_opt_n)
             sys.exit("")
+        """
         chk_files(key_opt,path,1)
         chk_files(key_opt_n,path2,0)
         
@@ -177,7 +179,8 @@ if scuenc=="YES":
             fil_temp=[]
             dirs = os.listdir(work_dir)
             dir_list = [i for i in dirs if os.path.isdir(os.path.join(work_dir, i))]
-            dir_list=dir_list.sor()
+            dirr_list=dir_list.sort()
+            print(dirr_list)
             for i in dir_list:
                 if fil[0][0] == "all_base":
                     ld=[i,'-','-','-']
