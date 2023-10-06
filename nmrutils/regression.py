@@ -16,6 +16,22 @@ class DataNMR:
         self.b=intercept
         self.r2=r_squere
         self.rmsd=rmsd
+
+#--------------------------------------------------- 
+def xy(data,cputime,elepsetime):
+    xn_h,xn_c,yn_h,yn_c=[],[],[],[]
+    for imol in data:
+        cputime= imol.ct +cputime
+        elepsetime= imol.et +elepsetime
+        for iatom in imol.atoms:
+            symbol= iatom.s
+            if symbol == "H":
+                xn_h.append(iatom.e)
+                yn_h.append(iatom.t)
+            if symbol == "C":
+                xn_c.append(iatom.e)
+                yn_c.append(iatom.t)
+    return xn_h,xn_c,yn_h,yn_c,cputime,elepsetime
 #--------------------------------------------------- 
 def stat(x,y,data):
     yscal = []

@@ -131,14 +131,16 @@ def CHESMS():
     # ·····························································
     if new_mol =="YES":
         r=4
-        exist(path,False)
+        # exist(path,False)
         exist(path2,False)
-        falla,error,opt,nmr = terminacion(path)
+        # falla,error,opt,nmr = terminacion(path)
         falla,error,opt,nmr = terminacion(path2)
-        data = molecules_data(path,dnmr)
+        # data = molecules_data(path,dnmr)
         data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
-        key_opt=out_w(path,data,[],"-")
-        key_opt_n=out_w(path2,data,data2,tbl_comp)
+        # key_opt=out_w(path,data,[],'-')
+        # key_opt_n=out_w(path2,data,data2,tbl_comp)
+        key_opt_n=out_w(path2,data2,[],tbl_comp)
+
         """
         if key_opt != key_opt_n : 
             print("Not the same level of theory")
@@ -146,7 +148,7 @@ def CHESMS():
             print(path2+"   :  "+key_opt_n)
             sys.exit("")
         """
-        chk_files(key_opt,path,1)
+        #chk_files(key_opt,path,1)
         chk_files(key_opt_n,path2,0)
         
     # ·····························································

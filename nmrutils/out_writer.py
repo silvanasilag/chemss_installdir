@@ -13,7 +13,7 @@ import pandas as pd
 
 from scipy import stats
 from nmrutils.terminacion import from_reader
-from nmrutils.regression import scale,stat,splot
+from nmrutils.regression import scale,stat,splot,xy
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam     import  get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
@@ -50,7 +50,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
         gd=str(kop[2])
     else: 
         gd="No dispersion added"
-    opt=str(kop[0])+"/"+str(kop[1])
+    opt=str(keys[0])
     nmr=str(keys[1])
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
@@ -77,23 +77,9 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
 
 #---------------------------------------------------    
 def out_w(path,data,new,tbl_comp):
-    xhh = []
-    yhh = []    
-    xcc = []
-    ycc = []
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
     elepsetime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
-    for imol in data:
-        cputime= imol.ct +cputime
-        elepsetime= imol.et +elepsetime
-        for iatom in imol.atoms:
-            symbol= iatom.s
-            if symbol == "H":
-                xhh.append(iatom.e)
-                yhh.append(iatom.t)
-            if symbol == "C":
-                xcc.append(iatom.e)
-                ycc.append(iatom.t)
+    xhh,xcc,yhh,ycc,cputime,elepsetime = xy(data,cputime,elepsetime)
     #----------------------------------------------------
     data_h =DataNMR("H", 0, 0, 0, 0)
     data_c =DataNMR("C", 0, 0, 0, 0) 
@@ -106,20 +92,7 @@ def out_w(path,data,new,tbl_comp):
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     if len(new) != 0:
         scale(new, data_h, data_c)
-        for imol in new:
-            cputime= imol.ct +cputime
-            elepsetime= imol.et +elepsetime
-            for iatom in imol.atoms:
-                symbol= iatom.s
-                if symbol == "H":
-                    xn_h.append(iatom.e)
-                    yn_h.append(iatom.t)
-                if symbol == "C":
-                    xn_c.append(iatom.e)
-                    yn_c.append(iatom.t)
-            cputime= imol.ct + cputime
-            elepsetime= imol.et + elepsetime
-        # data=data+new
+        xn_h,xn_c,yn_h,yn_c,cputime,elepsetime =xy(new,cputime,elepsetime)
     #---------------------------------------------------Escribe los  archivos out finales     
     os.chdir(path)
     out=(glob.glob("*.out"))
@@ -135,7 +108,7 @@ def out_w(path,data,new,tbl_comp):
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
-    out =str(path)+"/scaled_data.txt"
+    out =str(path)+"/scaled_est_data.txt"
     out=open(out,'a')
     out.write("CHEMical Shift Scaler\n\n")
     out.write("This software is provided by TheoChem Merida. \n")
@@ -199,6 +172,8 @@ def out_w(path,data,new,tbl_comp):
                 rmsdc = (sum(pc)/len(pc))**0.5
                 out.write("rmsd of C: %25.4f \n"%(rmsdc))
     else:
+        pph=[]
+        ppc=[]
         for imol in new:
             out.write("------------------------------------\n")
             out.write("%s\n"%(imol.im))
@@ -211,16 +186,24 @@ def out_w(path,data,new,tbl_comp):
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
                     ph.append((iatom.r)**2)
+                    pph.append((iatom.r)**2)
                 if symbol == "C":            
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
                     pc.append((iatom.r)**2)
+                    ppc.append((iatom.r)**2)
             if len(ph)!= 0 :
                 rmsdh = (sum(ph)/len(ph))**0.5
                 out.write("rmsd of H: %25.4F \n"%(rmsdh))
             if len(pc)!= 0 :   
                 rmsdc = (sum(pc)/len(pc))**0.5
                 out.write("rmsd of C: %25.4f \n"%(rmsdc))
+        if len(pph)!= 0 :
+            rmsdh = (sum(pph)/len(pph))**0.5
+            out.write("\n\ngeneral rmsd of H: %25.4F \n"%(rmsdh))
+        if len(ppc)!= 0 :   
+            rmsdc = (sum(ppc)/len(ppc))**0.5
+            out.write("general rmsd of C: %25.4f \n"%(rmsdc))
 
     out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
@@ -230,4 +213,3 @@ def out_w(path,data,new,tbl_comp):
     comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
     
     return keys[0]
-
