@@ -40,6 +40,16 @@ cola = get_a_str('queue','qintel') #
 nproc = get_a_int('nodes',4) #
 
 
+def kys_changes(lev):
+    if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
+    if "TPSSTPSS" in lev: lev=lev.replace("TPSSTPSS","TPSS")
+    if "GD3BJ" in lev: lev=lev.replace("_GD3BJ","-D3BJ")
+    if "GD3" in lev: lev=lev.replace("_GD3","-D3")
+    if "GD2" in lev: lev=lev.replace("_GD2","-D2")
+    lev=lev.replace("_","/")
+    return lev
+
+
 #--------------------------------------------------- 
 
 def comp_table(tbl_comp,data_c,data_h,keys,path):
@@ -50,8 +60,8 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
         gd=str(kop[2])
     else: 
         gd="No dispersion added"
-    opt=str(keys[0])
-    nmr=str(keys[1])
+    opt=kys_changes(str(keys[0]))
+    nmr=kys_changes(str(keys[1]))
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
                         "Geometric OPT": opt,
@@ -79,7 +89,9 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
 def out_w(path,data,new,tbl_comp):
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
     elepsetime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
-    xhh,xcc,yhh,ycc,cputime,elepsetime = xy(data,cputime,elepsetime)
+    cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
+    elepsetime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
+    xhh,xcc,yhh,ycc,cputime,elepsetime,cputime_nmr,elepsetime_nmr = xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr)
     #----------------------------------------------------
     data_h =DataNMR("H", 0, 0, 0, 0)
     data_c =DataNMR("C", 0, 0, 0, 0) 
@@ -108,14 +120,16 @@ def out_w(path,data,new,tbl_comp):
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
-    out =str(path)+"/scaled_est_data.txt"
+    out =str(path)+"/scaled_all_time.txt"
     out=open(out,'a')
     out.write("CHEMical Shift Scaler\n\n")
     out.write("This software is provided by TheoChem Merida. \n")
     out.write("Code by Silvana Silva-Aguirre, Filiberto Ortiz-Chi and Gabriel Merino \n")
     out.write("Username: "+os.path.split(os.path.expanduser('~'))[1]+"\n\n")
     out.write("Date: "+fechayhora()+"\n\n")
-    out.write("Total Job cpu time: %s\n\n"%(str(cputime)))
+    out.write("Total Job cpu time: %s\n\n"%(str(cputime+cputime_nmr)))
+    out.write("Total Job cpu opt: %s\n\n"%(str(cputime)))
+    out.write("Total Job cpu nmr: %s\n\n"%(str(cputime_nmr)))
     out.write("------------------------------------------------------------------------------------------------\n")
     out.write("The Geometry optimization and the isotropic shielding constants were computed using Gaussian G16\n")
     out.write("------------------------------------------------------------------------------------------------\n")
@@ -160,17 +174,23 @@ def out_w(path,data,new,tbl_comp):
                 if symbol == "H":
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
-                    ph.append((iatom.r)**2)
+                    ph.append((iatom.r))
                 if symbol == "C":            
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
-                    pc.append((iatom.r)**2)
+                    pc.append((iatom.r))
             if len(ph)!= 0 :
                 rmsdh = (sum(ph)/len(ph))**0.5
                 out.write("rmsd of H: %25.4F \n"%(rmsdh))
             if len(pc)!= 0 :   
                 rmsdc = (sum(pc)/len(pc))**0.5
                 out.write("rmsd of C: %25.4f \n"%(rmsdc))
+            timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=int(imol.ct[3]))
+            timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
+            out.write("Job cpu time for optimization: %s\n"%(timecpu))
+            if imol.chk==1: out.write("Chk: YES \n")
+            out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
+
     else:
         pph=[]
         ppc=[]
@@ -185,13 +205,13 @@ def out_w(path,data,new,tbl_comp):
                 if symbol == "H":
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
-                    ph.append((iatom.r)**2)
-                    pph.append((iatom.r)**2)
+                    ph.append((iatom.r))
+                    pph.append((iatom.r))
                 if symbol == "C":            
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
-                    pc.append((iatom.r)**2)
-                    ppc.append((iatom.r)**2)
+                    pc.append((iatom.r))
+                    ppc.append((iatom.r))
             if len(ph)!= 0 :
                 rmsdh = (sum(ph)/len(ph))**0.5
                 out.write("rmsd of H: %25.4F \n"%(rmsdh))
@@ -204,6 +224,11 @@ def out_w(path,data,new,tbl_comp):
         if len(ppc)!= 0 :   
             rmsdc = (sum(ppc)/len(ppc))**0.5
             out.write("general rmsd of C: %25.4f \n"%(rmsdc))
+        timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=int(imol.ct[3]))
+        timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
+        out.write("Job cpu time for optimization: %s\n"%(timecpu))
+        if imol.chk==1: out.write("Chk: YES \n")
+        out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
 
     out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")

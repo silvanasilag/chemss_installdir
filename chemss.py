@@ -137,10 +137,11 @@ def CHESMS():
         falla,error,opt,nmr = terminacion(path2)
         # data = molecules_data(path,dnmr)
         data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
-        # key_opt=out_w(path,data,[],'-')
-        # key_opt_n=out_w(path2,data,data2,tbl_comp)
-        key_opt_n=out_w(path2,data2,[],tbl_comp)
-
+        key_opt_n=out_w(path2,data2,[],tbl_comp)   #scale factor perform with just the new data
+        # key_opt_n=out_w(path2,data,data2,tbl_comp) #scale factor perform with just the base dataset
+        # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
+        # data3=data+data2
+        # key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
         """
         if key_opt != key_opt_n : 
             print("Not the same level of theory")
@@ -159,7 +160,7 @@ def CHESMS():
 
     # os.system("rm "+str(path)+"/*.chk")  #scrach de gaussian
     # os.system("rm ../*.ER")               #scrach de gaussian            
-    # os.system("rm ../*.OU")               #scrach de gaussian
+    # os.system("rm ../*.OU")          ∫     #scrach de gaussian
 
 exist("INPUTNMR.txt","start")
 

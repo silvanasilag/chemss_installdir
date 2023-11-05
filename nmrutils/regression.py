@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from scipy import stats
 from sklearn.metrics import mean_squared_error
+from datetime import datetime, timedelta
 
 #--------------------------------------------------- 
 class DataNMR:
@@ -18,11 +19,21 @@ class DataNMR:
         self.rmsd=rmsd
 
 #--------------------------------------------------- 
-def xy(data,cputime,elepsetime):
+def xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr):
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     for imol in data:
-        cputime= imol.ct +cputime
-        elepsetime= imol.et +elepsetime
+        timecpu=timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=int(imol.ct[3]))
+        timelaps=timedelta(days=int(imol.et[0]),hours=int(imol.et[1]), minutes=int(imol.et[2]), seconds=int(imol.et[3]))
+        timecpu_nmr=timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
+        timelaps_nmr=timedelta(days=int(imol.et_nmr[0]),hours=int(imol.et_nmr[1]), minutes=int(imol.et_nmr[2]), seconds=int(imol.et_nmr[3]))
+        print(timecpu)
+        print(timecpu_nmr)
+        cputime= timecpu+cputime
+        cputime_nmr= timecpu_nmr+cputime_nmr
+        print("------")
+        print(cputime)
+        elepsetime= timelaps + elepsetime
+        elepsetime_nmr= timelaps_nmr + elepsetime_nmr
         for iatom in imol.atoms:
             symbol= iatom.s
             if symbol == "H":
@@ -31,10 +42,11 @@ def xy(data,cputime,elepsetime):
             if symbol == "C":
                 xn_c.append(iatom.e)
                 yn_c.append(iatom.t)
-    return xn_h,xn_c,yn_h,yn_c,cputime,elepsetime
+    return xn_h,xn_c,yn_h,yn_c,cputime,elepsetime,cputime_nmr,elepsetime_nmr
 #--------------------------------------------------- 
 def stat(x,y,data):
     yscal = []
+    print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
     data.r2 = r_value**2
     for i in range(len(y)):

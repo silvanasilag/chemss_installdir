@@ -2,7 +2,7 @@ import sys
 import os
 from os import path
 import glob
-import datetime
+# import datetime
 
 
 class AtomNMR:
@@ -15,14 +15,17 @@ class AtomNMR:
         self.c=correccion
 #------------------------------------------------------------------------------------------
 class MoleculeNMR:
-    def __init__(self, name,cpu_time,elapse_time,rmsd,mol_id):
+    def __init__(self, name,cpu_time,elapse_time,cpu_time_nmr,elapse_time_nmr,rmsd,mol_id,chk):
         self.atoms = []
         self.i = name
         self.n = 0
         self.ct=cpu_time
         self.et=elapse_time
+        self.ct_nmr=cpu_time_nmr
+        self.et_nmr=elapse_time_nmr
         self.rmsd=rmsd
         self.im=mol_id
+        self.chk=chk
     def add_atom(self, atom):
         self.atoms.append(atom)
         natoms=len(self.atoms)
@@ -37,39 +40,48 @@ def flotante(variable):
     except:
         return False
 
+def extrac_time(lin):
+    (d,h,m,s)=(int(lin[3]), int(lin[5]), int(lin[7]), float(lin[9]))
+    return (d,h,m,s)
+
 def from_reader(txt, out, mol_id):
     oslist, otlist=[], []
-    sum = datetime.timedelta()
     time=0
-    (d1,h1,m1,s1)=(0,0,0,0)
-    (d2,h2,m2,s2)=(0,0,0,0)
+    timecpu=(0,0,0,0)
+    timelaps=(0,0,0,0)
+    timecpu_nmr=(0,0,0,0)
+    timelaps_nmr=(0,0,0,0)
     fl=0
+    chk=0
     with open(out, 'r') as f2:    #abre el out
         for line in f2:
             line = line.strip()
             lin = line.split()
             os = 'X'
+            if "#" and "OPT" and "Geom=Check" in line: 
+                chk=1
             if "Isotropic" in line and len(lin)==8:
+                fl=1
                 ot=float(lin[4])
                 os=str(lin[1])
                 oslist.append(os) #appendiza simbolo del atomo
                 otlist.append(ot) #appendiza las valor isotropico
-            if "Job cpu time:" in line:
-                (d,h,m,s)=(int(lin[3]), int(lin[5]), int(lin[7]), float(lin[9]))
-                (d1,h1,m1,s1)=(d+d1,h+h1,m+m1,s+s1)
-            if "Elapsed time:" in line:
-                (d,h,m,s)=(int(lin[2]), int(lin[4]), int(lin[6]),float(lin[8]))
-                (d2,h2,m2,s2)=(d+d2,h+h2,m+m2,s+s2)         
-        timecpu = datetime.timedelta(days=int(d1),hours=int(h1), minutes=int(m1), seconds=round(float(s)))
-        timelaps = datetime.timedelta(days=int(d2),hours=int(h2), minutes=int(m2), seconds=round(float(s2)))
-    nz=0   
+            if "Job cpu time:" in line and fl==0: timecpu=extrac_time(lin)
+            if "Elapsed time:" in line and fl==0: 
+                lin.insert(0,"-")
+                timelaps=extrac_time(lin)
+            if "Job cpu time:" in line and fl==1: timecpu_nmr=extrac_time(lin)
+            if "Elapsed time:" in line and fl==1: 
+                lin.insert(0,"-")
+                timelaps_nmr=extrac_time(lin)
+    nz,fl=0,0
     with open(txt, 'r') as f:  #txt
         for line in f:
             line = line.strip()
             lin = line.split()
             if fl == 0:
                 name=line
-                mol0=MoleculeNMR(name,timecpu,timelaps,0.0,mol_id)
+                mol0=MoleculeNMR(name,timecpu,timelaps,timecpu_nmr,timelaps_nmr,0.0,mol_id,chk)
                 fl=1
             if len(lin)>1:
                 if flotante(lin[1])==True or "=" in line or "Nan" in line:
@@ -98,7 +110,7 @@ def filter_data(mol0):
     av,ex,iso,s,nz,nn=[],[],[],[],[],[] #l
     is_v=-200
     name=""
-    mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.et,mol0.rmsd,mol0.im)
+    mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.et,mol0.ct_nmr,mol0.et_nmr,mol0.rmsd,mol0.im,mol0.chk)
     for i,iatom in enumerate(mol0.atoms):
         ex.append(iatom.e)
         iso.append(iatom.t)
