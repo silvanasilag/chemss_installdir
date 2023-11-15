@@ -120,7 +120,7 @@ def out_w(path,data,new,tbl_comp):
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
-    out =str(path)+"/scaled_all_time.txt"
+    out =str(path)+"/scaled_hormons.txt"
     out=open(out,'a')
     out.write("CHEMical Shift Scaler\n\n")
     out.write("This software is provided by TheoChem Merida. \n")

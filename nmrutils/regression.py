@@ -26,12 +26,8 @@ def xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr):
         timelaps=timedelta(days=int(imol.et[0]),hours=int(imol.et[1]), minutes=int(imol.et[2]), seconds=int(imol.et[3]))
         timecpu_nmr=timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
         timelaps_nmr=timedelta(days=int(imol.et_nmr[0]),hours=int(imol.et_nmr[1]), minutes=int(imol.et_nmr[2]), seconds=int(imol.et_nmr[3]))
-        print(timecpu)
-        print(timecpu_nmr)
         cputime= timecpu+cputime
         cputime_nmr= timecpu_nmr+cputime_nmr
-        print("------")
-        print(cputime)
         elepsetime= timelaps + elepsetime
         elepsetime_nmr= timelaps_nmr + elepsetime_nmr
         for iatom in imol.atoms:
