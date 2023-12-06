@@ -10,6 +10,7 @@ from datetime import datetime as dt
 import random
 import glob
 import pandas as pd
+import re
 
 from scipy import stats
 from nmrutils.terminacion import from_reader
@@ -43,9 +44,10 @@ nproc = get_a_int('nodes',4) #
 def kys_changes(lev):
     if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
     if "TPSSTPSS" in lev: lev=lev.replace("TPSSTPSS","TPSS")
-    if "GD3BJ" in lev: lev=lev.replace("_GD3BJ","-D3BJ")
-    if "GD3" in lev: lev=lev.replace("_GD3","-D3")
-    if "GD2" in lev: lev=lev.replace("_GD2","-D2")
+    if "GD3BJ" in lev: lev=lev.replace("_GD3BJ","")
+    if "GD3" in lev: lev=lev.replace("_GD3","")
+    if "GD2" in lev: lev=lev.replace("_GD2","")
+    if "Def2SVP" in lev: lev=lev.replace("Def2SVP","def2-SVP") 
     lev=lev.replace("_","/")
     return lev
 
@@ -56,17 +58,34 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
     os.chdir("..")
     # print(os.getcwd())
     kop=str(keys[0]).split("_")
+    knmr=re.sub(r'_', '/', (keys[1]), 1)
+    knmr=str(knmr).split("_")
     if len(kop)==3 :
         gd=str(kop[2])
+        if "GD3BJ" in gd: gd=gd.replace("GD3BJ","D3BJ")
+        if "GD3" in gd: gd=gd.replace("GD3","D3")
+        if "GD2" in gd: gd=gd.replace("GD2","D2")
     else: 
         gd="No dispersion added"
+    if len(knmr)>1:
+        nmr=knmr[0]
+        solvent=knmr[1]
+        if len(knmr)>2:
+            solv_method=knmr[2]
+        else:
+            solv_method="PCM"
+    else:
+        nmr=kys_changes(str(keys[1]))
+        solvent="Gas phase"
+        solv_method=""
     opt=kys_changes(str(keys[0]))
-    nmr=kys_changes(str(keys[1]))
     tbl_compf=str(tbl_comp+".csv")
     df1 = pd.DataFrame({" ":[path],
                         "Geometric OPT": opt,
                         "NMR": nmr,
                         "Dispersion":gd,
+                        "Solvent": solvent,
+                        "Solvent model": solv_method,
                         "slope H1": [round(data_h.m,4)],
                         "intercept H1":[round(data_h.b,4)],
                         "RMSD H1" :[round(data_h.rmsd,4)],
@@ -86,7 +105,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
         df1.to_csv(tbl_compf,index=False)
 
 #---------------------------------------------------    
-def out_w(path,data,new,tbl_comp):
+def out_w(path,data,new,tbl_comp,keys):
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
     elepsetime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
@@ -108,7 +127,6 @@ def out_w(path,data,new,tbl_comp):
     #---------------------------------------------------Escribe los  archivos out finales     
     os.chdir(path)
     out=(glob.glob("*.out"))
-    nan,nan2,keys=from_reader(out[(random.randrange(len(out)))],"-","-")
     key_opt=keys[0]
     key_nmr=keys[1]
     keys=[key_norm(key_opt,"OPT"),key_norm(key_nmr,"NMR")]
@@ -234,7 +252,6 @@ def out_w(path,data,new,tbl_comp):
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
     out.close
     dats = [data_h,data_c]
-    # if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
-    comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
+    if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
     
     return keys[0]

@@ -107,5 +107,18 @@ def key_norm(key,fun):
         if "empiricaldispersion" in i.lower():
           ii=i.split("=")[1]
           w_key=w_key+"_"+ ii
+    if fun=="NMR":
+        if "SCRF" in key:
+            solvente_match = re.search(r'Solvent=([^)\s]+)', str(key))
+            if solvente_match:
+                solvent = solvente_match.group(1)
+            else:
+                solvent = None
+            if solvent!= "None":
+                solv=solvent.split(",")
+                if len(solv)>1:
+                    w_key=w_key+"_"+solv[0]+"_"+solv[1]
+                else:
+                    w_key=w_key+"_"+solvent
     return w_key
 

@@ -20,9 +20,15 @@ def from_reader(inp,key_opt,key_nmr):
                     key_nmr=line
                     key_nmr=key_nmr.strip(' Guess=Read')
                     key_nmr=key_nmr.strip(' Geom=Check')
+                if str("#") and str("IOP")in line.upper() : 
+                    if "(3/76=1000007400,3/77=0999900001,3/78=0000109999)" in line: w="WC04"
+                    elif "(3/76=1000001189,3/77=0961409999,3/78=0000109999)" in line: w="WP04"
+                    else: w="Iop"
+                    if key_nmr == "-": key_opt = key_opt=key_opt.replace("BLYP",w) 
+                    if key_opt != "-" and key_nmr != "-": key_nmr =key_nmr.replace("BLYP",w) 
                 if "Magnetic shielding" in line:
-                    ter = "Normal"
-                if "Error" in line:
+                    ter = "Normal"  
+                if "Error" in line: 
                     linea = line
     keys=[key_opt,key_nmr]
     return ter,linea,keys
@@ -94,5 +100,5 @@ def terminacion(out):
             print("|%s || %-20s|\n " %(falla[i],error[i]))
         sys.exit(1)
 
-    return falla,error,opt,nmr
+    return falla,error,keys
     
