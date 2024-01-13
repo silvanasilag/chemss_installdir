@@ -6,7 +6,7 @@
 ##modulos
 import sys
 import os
-from os import path 
+#from os import path
 import glob
 import time
 import shutil
@@ -19,7 +19,7 @@ from nmrutils.getbilparam     import get_a_str, get_a_int, get_a_float
 from runrun.qpbs              import send_pbs_files_to_queue
 from nmrutils.terminacion     import terminacion
 from nmrutils.isotropicreader import molecules_data
-from nmrutils.get_geometry    import get_geo, write_xyz
+#from nmrutils.get_geometry    import get_geo, write_xyz
 from nmrutils.getbilparam     import read_block_of_inp
 from runrun.chemssinput_writer import chemss_inp,chemssinp_edit
 
@@ -31,8 +31,6 @@ work_dir=work_dir.strip("'")
 dnmr=str(chms_path +"/dnmr") 
 xyz=str(chms_path+"/xyz")
 start_time = time.time()
-
-
 
 def exist(dirct,n): # hacesr estas banderas más a pueba de tontos
     m=0
