@@ -43,26 +43,26 @@ def key_compare(key_opt,key_nmr,nmr,opt):
         f[0]=1
         key_opt.append(opt.upper())
     if opt =="-": f[2]=1
+
+    if f[0] == 1 and x != 0: print("Not the same OPT key words", glist[x], x)
+    if f[1] == 1 and x != 0: print("Not the same NMR key words", glist[x], x)
+    if f[2] == 1: print("Not OPT key check it out", glist[x], x)
+
+
     return key_opt,key_nmr,f
 
 #----------------------------------------------------------------------
-def terminacion(out):
-    path = out
-    os.chdir(path)
-    error = [ ]
-    filesinp = [ ]
+def terminacion(f_err,glist):
     key_opt=[]
     key_nmr=[]
+    error = []
+    nofalla = []
+    falla =[]
     key_opt_f=[]
     key_nmr_f=[]
-    for iifile in glob.glob("*.out"):  
-        filesinp.append(iifile)
-        filesinp.sort()
-    nofalla = [ ]
-    falla =[ ]
-    print(out)
-    for x in range(len(filesinp)):
-        innp = filesinp[x]
+    run_index=glist.index(f_err)
+    for x in range(len(glist))[run_index:]:
+        innp = glist[x]
         ter,linea,keys = from_reader(innp,"-","-")
         nmr=keys[1]
         opt=keys[0]
@@ -72,16 +72,14 @@ def terminacion(out):
             error.append(str(linea))
         if  ter == "normal":
             nofalla.append(innp)
-        if f[0]==1 and x != 0 :print("Not the same OPT key words",filesinp[x],x)
-        if f[1]==1 and x != 0:print("Not the same NMR key words",filesinp[x],x)
-        if f[2]==1: print("Not OPT key check it out",filesinp[x],x)
-        key_opt_f.append((opt,filesinp[x]))
-        key_nmr_f.append((nmr,filesinp[x]))
+
+        key_opt_f.append((opt,glist[x]))
+        key_nmr_f.append((nmr,glist[x]))
     if len(key_opt)!=1 :
-        print(key_opt) 
+        print(key_opt)
         for i in key_opt_f:print(i)
     if len(key_nmr)!=1 :
-        print(key_nmr) 
+        print(key_nmr)
         for ii in key_nmr_f:print(ii)
 
     os.chdir("..")

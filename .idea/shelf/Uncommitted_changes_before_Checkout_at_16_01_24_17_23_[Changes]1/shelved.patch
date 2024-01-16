@@ -1,0 +1,86 @@
+Index: nmrutils/terminacion.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># -*- coding: utf-8 -*-\n\nimport sys\nimport os\nimport glob\nclass Level_ot: #Level of theory\n    def __init__(self, opt_fun,opt_base, nmr_fun, nmr_base, dispersion, solv_model, solvent):\n        self.of=opt_fun\n        self.ob=opt_base\n        self.nf=nmr_fun\n        self.nb= nmr_base\n        self.d=dispersion\n        self.sm=solv_model\n        self.sl=solvent\n\n#--------------------------DATA READER-----------------------------------------\ndef from_reader(inp,key_opt,key_nmr):\n    ter =  \"not normal\"\n    linea ='normal'\n    fl=0\n    with open(inp, 'r') as f:\n        print(\"---------\",inp)\n        for line in f:\n            line = line.strip()\n            if len(line) != 0:\n                if str(\"#\")  and str(\"OPT\") in line and key_opt==\"-\":\n                    key_opt =line\n                    key_opt=key_opt.strip(' Guess=Read')\n                    key_opt=key_opt.strip(' Geom=Check')\n                    fl=1\n                if str(\"#\") and str(\"NMR\")in line and key_nmr==\"-\":\n                    key_nmr=line\n                    key_nmr=key_nmr.strip(' Guess=Read')\n                    key_nmr=key_nmr.strip(' Geom=Check')\n                    fl=1\n                if str(\"#\") and str(\"IOP\")in line.upper() and fl==2:\n                    print(line)\n                    if \"(3/76=1000007400,3/77=0999900001,3/78=0000109999)\" in line: w=\"WC04\"\n                    elif \"(3/76=1000001189,3/77=0961409999,3/78=0000109999)\" in line: w=\"WP04\"\n                    else: w=\"Iop\"\n                    print(inp)\n                    print(\"line 37:\",key_nmr,key_opt)\n                    if key_nmr == \"-\": key_opt = key_opt=key_opt.replace(\"BLYP\",w) \n                    if key_opt != \"-\" and key_nmr != \"-\": key_nmr =key_nmr.replace(\"BLYP\",w) \n                if \"Magnetic shielding\" in line:\n                    ter = \"Normal\"  \n                if \"Error\" in line: \n                    linea = line\n                fl=fl+1\n    keys.of=key_opt\n    keys.nf=key_nmr\n    return ter,linea,keys\n\ndef key_compare(key_opt,key_nmr,nmr,opt):\n    opt=opt.strip(\"=CARTESIAN\")\n    f=[0,0,0]\n    if nmr.upper() not in key_nmr: \n        f[1]=1\n        key_nmr.append(nmr.upper())\n    if opt.upper() != \"-\" and opt.upper() not in key_opt: \n        f[0]=1\n        key_opt.append(opt.upper())\n    if opt ==\"-\": f[2]=1\n    return key_opt,key_nmr,f\n\n#----------------------------------------------------------------------\ndef terminacion(out):\n    path = out\n    os.chdir(path)\n    error = [ ]\n    filesinp = [ ]\n    key_opt=[]\n    key_nmr=[]\n    key_opt_f=[]\n    key_nmr_f=[]\n    for iifile in glob.glob(\"*.out\"):  \n        filesinp.append(iifile)\n        filesinp.sort()\n    nofalla = [ ]\n    falla =[ ]\n    print(out)\n    for x in range(len(filesinp)):\n        innp = filesinp[x]\n        ter,linea,keys = from_reader(innp,\"-\",\"-\")\n        nmr=keys[1]\n        opt=keys[0]\n        key_opt,key_nmr,f=key_compare(key_opt,key_nmr,nmr,opt)\n        if  ter == \"not normal\":\n            falla.append(innp)\n            error.append(str(linea))\n        if  ter == \"normal\":\n            nofalla.append(innp)\n        if f[0]==1 and x != 0 :print(\"Not the same OPT key words\",filesinp[x],x)\n        if f[1]==1 and x != 0:print(\"Not the same NMR key words\",filesinp[x],x)\n        if f[2]==1: print(\"Not OPT key check it out\",filesinp[x],x)\n        key_opt_f.append((opt,filesinp[x]))\n        key_nmr_f.append((nmr,filesinp[x]))\n    if len(key_opt)!=1 :\n        print(key_opt) \n        for i in key_opt_f:print(i)\n    if len(key_nmr)!=1 :\n        print(key_nmr) \n        for ii in key_nmr_f:print(ii)\n\n    os.chdir(\"..\")\n\n    if len(falla) != 0:\n        out = str(path)+ \"mmmmistake\" + \".txt\"       #Name of the files with error\n        with open(out,'a') as out:\n            out.write(\"OH NO!\\n\\n\")\n            out.write(\"Calculation data\\n\")\n            out.write( \"%s \\n %s \\n\"%(opt,nmr))\n            out.write(\"Termination with error:%i \\n\" %(len(error)))\n            for i in range(len(falla)):\n                out.write(\"|%s || %-20s|\\n \" %(falla[i],error[i]))\n        print(\"Termination with erro:%i \\n\" %(len(error)))\n        for i in range(len(falla)):\n            print(\"|%s || %-20s|\\n \" %(falla[i],error[i]))\n        sys.exit(1)\n\n    keys = Level_ot(\"na\", \"na\", \"\", \"\", \"\", \"\", \"\")\n    return falla,error,keys\n    \n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/nmrutils/terminacion.py b/nmrutils/terminacion.py
+--- a/nmrutils/terminacion.py	
++++ b/nmrutils/terminacion.py	
+@@ -61,26 +61,30 @@
+         f[0]=1
+         key_opt.append(opt.upper())
+     if opt =="-": f[2]=1
++
++
+     return key_opt,key_nmr,f
+ 
+ #----------------------------------------------------------------------
+-def terminacion(out):
+-    path = out
++def terminacion(f_err,glist):
++    """terminacion(out,path)
+     os.chdir(path)
+-    error = [ ]
++
+     filesinp = [ ]
+     key_opt=[]
+     key_nmr=[]
+     key_opt_f=[]
+     key_nmr_f=[]
+-    for iifile in glob.glob("*.out"):  
++    for iifile in glob.glob("*.out"):
+         filesinp.append(iifile)
+         filesinp.sort()
+-    nofalla = [ ]
+-    falla =[ ]
+-    print(out)
+-    for x in range(len(filesinp)):
+-        innp = filesinp[x]
++    """
++    error = []
++    nofalla = []
++    falla =[]
++    run_index=glist.index(f_err)
++    for x in range(len(glist))[run_index:]:
++        innp = glist[x]
+         ter,linea,keys = from_reader(innp,"-","-")
+         nmr=keys[1]
+         opt=keys[0]
+@@ -90,11 +94,11 @@
+             error.append(str(linea))
+         if  ter == "normal":
+             nofalla.append(innp)
+-        if f[0]==1 and x != 0 :print("Not the same OPT key words",filesinp[x],x)
+-        if f[1]==1 and x != 0:print("Not the same NMR key words",filesinp[x],x)
+-        if f[2]==1: print("Not OPT key check it out",filesinp[x],x)
+-        key_opt_f.append((opt,filesinp[x]))
+-        key_nmr_f.append((nmr,filesinp[x]))
++        if f[0]==1 and x != 0 :print("Not the same OPT key words",glist[x],x)
++        if f[1]==1 and x != 0:print("Not the same NMR key words",glist[x],x)
++        if f[2]==1: print("Not OPT key check it out",glist[x],x)
++        key_opt_f.append((opt,glist[x]))
++        key_nmr_f.append((nmr,glist[x]))
+     if len(key_opt)!=1 :
+         print(key_opt) 
+         for i in key_opt_f:print(i)
+Index: chemss.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#!/usr/local/anaconda3/bin/python\n# -*- coding: utf-8 -*-\n#Silvana Silva Aguirre, CINVESTAV Unidad Mérida,2019\n\n##modulos\nimport sys\nimport os\nimport glob\nimport time\nimport shutil\n\nfrom nmrutils.getbilparam     import get_a_str, get_a_int, get_a_float\nfrom runrun.qpbs              import send_pbs_files_to_queue\nfrom nmrutils.terminacion     import terminacion\nfrom nmrutils.isotropicreader import molecules_data\nfrom nmrutils.getbilparam     import read_block_of_inp\nfrom runrun.chemssinput_writer import chemss_inp,chemssinp_edit\n\nchms_path= \"/Users/silvana/installdir/chemss_installdir/dataset\" #path de la base de datos del xyz el dnmr\nwork_dir=str(os.getcwdb()) #path de la carpeta desde donde se ejecuta\nwork_dir=work_dir.replace(\"b'\",\"'\")\nwork_dir=work_dir.strip(\"'\")\n\ndnmr=str(chms_path +\"/dnmr\") \nxyz=str(chms_path+\"/xyz\")\nstart_time = time.time()\n\ndef exist(dirct,n): # hacesr estas banderas más a pueba de tontos\n    m=0\n    if n == True : warning  =str( \"\\t Existing file \")\n    if n == False : warning  =str( \"\\t Not existing file\") # mensaje de inicio \n    if n== \"start\" : \n        m=1\n        n=False\n    if n == \"cyc\":\n        m=2 \n        n=False\n    if os.path.exists(dirct) == n:\n        if m==1:\n            print(\"CHEMSS 1.0\")\n            print(\"Please fill in the INTPUT.txt file \")\n            chemss_inp()\n            if os.path.exists(\"nw_ds\")==False:\n                os.mkdir(\"nw_ds\")\n        elif m==2:\n            f = open(\"sequence.txt\", \"a\")\n            f.write(\"dir_name/ dir_name_new/ OPT Funcional and basis / NMR funcional and basis\")\n            f.close()\n            print(\"Please fill in the sequence.txt file \")\n        else:\n            print(warning)\n        sys.exit(1)\n\ndef chk_files(key_opt,path,nn):\n    outdata=[]\n    key_opt=key_opt.replace(\"/\",\"_\")\n    os.chdir(path)\n    print(\"1\")\n    if len(glob.glob(\"*.chk\")) != 0:\n        print(\"2\")\n        if nn==1: chk_p = chms_path\n        else : chk_p = str(work_dir+\"/nw_ds\")\n        os.chdir(chk_p)\n        print(os.getcwd())\n        if os.path.exists(key_opt) == False:\n            os.mkdir(key_opt)\n            os.chdir(path) \n            print(os.getcwd())\n            for ifile in glob.glob(\"*.chk\"): outdata.append(ifile)\n            outdata.sort()\n            for iifile in outdata:\n                original = str(path+\"/\"+iifile)\n                target =str(chk_p+\"/\"+key_opt+\"/\"+iifile)\n                shutil.copyfile(original, target)\n            os.system(\"rm *.chk\")\n\ndef CHESMS():\n    r=0\n    fname = get_a_str('foldername_base','test')\n    fname2 = get_a_str('foldername_new','test2')\n    njobs = get_a_int('njobs',5)\n    stat = get_a_str('statistics','YES')\n    calc = get_a_str('calculus','YES')\n    time_sleep = get_a_float('timesleep',1.0)\n    new_mol = get_a_str('new_mol_statistics','NO')\n    new_molg = get_a_str('new_mol_calculus','NO')\n    tbl_comp=get_a_str('comparative','-') #bandera oculta\n    nmr = read_block_of_inp('gaussian nmr')\n    opt = read_block_of_inp('gaussian opt')\n    path = str(work_dir) + \"/\"+fname\n    path2 = str(work_dir) + \"/\"+fname2\n    print(new_mol,fname2)\n#---------------------------------------------------\n    if calc =='YES':\n        r=1\n        exist(path,True)\n        os.mkdir(path)\n        chk=chms_path\n        inp_pbs_writer(path,xyz,chk,nmr,opt) \n        os.chdir(path)\n        # send_pbs_files_to_queue(njobs, time_sleep)\n        #----------------------------------------------\n        print('Calculation complete')\n    if new_molg == \"YES\":\n        r=2\n        exist(path2,True)\n        os.mkdir(path2)\n        chk=work_dir+\"/nw_ds\"\n        inp_pbs_writer(path2,chk,chk,nmr,opt) #*******\n        os.chdir(path2)\n        send_pbs_files_to_queue(njobs, time_sleep)\n        #----------------------------------------------\n    if stat == 'YES' and new_mol ==\"NO\":\n        r=3\n        exist(path,False)\n        falla,error,keys = terminacion(path)\n        data = molecules_data(path,dnmr)\n        data2  = []\n        key_opt=out_w(path,data,data2,tbl_comp,keys)\n        chk_files(key_opt,path,1)\n    # ·····························································\n    if new_mol ==\"YES\":\n        r=4\n        # exist(path,False)\n        exist(path2,False)\n        # falla,error,opt,nmr = terminacion(path)\n        falla,error,keys= terminacion(path2)\n        # data = molecules_data(path,dnmr)\n        data2 = molecules_data(path2,str(work_dir+\"/nw_ds\"))\n        key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data\n        # key_opt_n=out_w(path2,data,data2,tbl_comp) #scale factor perform with just the base dataset\n        # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data \n        # data3=data+data2\n        # key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data\n        \"\"\"\n        if key_opt != key_opt_n : \n            print(\"Not the same level of theory\")\n            print(path+\"    :   \"+key_opt)\n            print(path2+\"   :  \"+key_opt_n)\n            sys.exit(\"\")\n        \"\"\"\n        #chk_files(key_opt,path,1)\n        chk_files(key_opt_n,path2,0)\n    # ·····························································\n    if  stat == 'NO' and  calc == 'NO'and new_mol == 'NO'and new_molg =='NO':\n        print(\"Nothing required\")\n    return r\n\n    # os.system(\"rm \"+str(path)+\"/*.chk\")  #scrach de gaussian\n    # os.system(\"rm ../*.ER\")               #scrach de gaussian            \n    # os.system(\"rm ../*.OU\")          ∫     #scrach de gaussian\n\nexist(\"INPUTNMR.txt\",\"start\")\n\nfrom runrun.inpwriter         import inp_pbs_writer\nfrom nmrutils.out_writer      import out_w\n\nscuenc = get_a_str('sequential','NO')\nif scuenc==\"YES\":\n    exist(\"sequence.txt\",\"cyc\")\n    fil=[]\n    with open(\"sequence.txt\", 'r') as f:\n        for line in f:\n            line = line.strip()\n            lin=line.split(\"/\")\n            if len(lin)==3:\n                fil.append(lin) \n            elif len(lin)!=0:\n                fil.append(lin) \n        if len(fil)==1 and \"all\" in fil[0][0] :\n            print(\"filtro1\")\n            fil_temp=[]\n            dirs = os.listdir(work_dir)\n            dir_list = [i for i in dirs if os.path.isdir(os.path.join(work_dir, i))]\n            dirr_list=dir_list.sort()\n            print(dirr_list)\n            for i in dir_list:\n                if fil[0][0] == \"all_base\":\n                    ld=[i,'-','-','-']\n                    fil_temp.append(ld)\n                if fil[0][0] == \"all_new\":\n                    ld=['-',i,'-','-']\n                    fil_temp.append(ld)\n            fil=fil_temp\n    for idata in fil:\n        os.chdir(work_dir)\n        chemssinp_edit(idata)\n        time.sleep(3)\n        r=CHESMS()\nelse:\n    r=CHESMS()\n\n# if r==3 or r==4:\n    # e = int(time.time() - start_time)\n    # file1 = open(str(path)+\"/sclsf_\" + str(path)+\".txt\", \"a\" )\n    # file1.write('{:02d}:{:02d}:{:02d}'.format(e // 3600, (e % 3600 // 60), e % 60))\n    # file1.close()\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/chemss.py b/chemss.py
+--- a/chemss.py	
++++ b/chemss.py	
+@@ -124,7 +124,7 @@
+         # exist(path,False)
+         exist(path2,False)
+         # falla,error,opt,nmr = terminacion(path)
+-        falla,error,keys= terminacion(path2)
++        #falla,error,keys= terminacion(path2)
+         # data = molecules_data(path,dnmr)
+         data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
+         key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data

@@ -134,7 +134,7 @@ def CHESMS():
         # exist(path,False)
         exist(path2,False)
         # falla,error,opt,nmr = terminacion(path)
-        falla,error,keys= terminacion(path2)
+        #falla,error,keys= terminacion(path2)
         # data = molecules_data(path,dnmr)
         data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
         key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
