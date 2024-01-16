@@ -3,12 +3,23 @@
 import sys
 import os
 import glob
+class Level_ot: #Level of theory
+    def __init__(self, opt_fun,opt_base, nmr_fun, nmr_base, dispersion, solv_model, solvent):
+        self.of=opt_fun
+        self.ob=opt_base
+        self.nf=nmr_fun
+        self.nb= nmr_base
+        self.d=dispersion
+        self.sm=solv_model
+        self.sl=solvent
 
-#--------------------------DATA READER-----------------------------------------   
+#--------------------------DATA READER-----------------------------------------
 def from_reader(inp,key_opt,key_nmr):
     ter =  "not normal"
     linea ='normal'
+    fl=0
     with open(inp, 'r') as f:
+        print("---------",inp)
         for line in f:
             line = line.strip()
             if len(line) != 0:
@@ -16,21 +27,28 @@ def from_reader(inp,key_opt,key_nmr):
                     key_opt =line
                     key_opt=key_opt.strip(' Guess=Read')
                     key_opt=key_opt.strip(' Geom=Check')
+                    fl=1
                 if str("#") and str("NMR")in line and key_nmr=="-":
                     key_nmr=line
                     key_nmr=key_nmr.strip(' Guess=Read')
                     key_nmr=key_nmr.strip(' Geom=Check')
-                if str("#") and str("IOP")in line.upper() : 
+                    fl=1
+                if str("#") and str("IOP")in line.upper() and fl==2:
+                    print(line)
                     if "(3/76=1000007400,3/77=0999900001,3/78=0000109999)" in line: w="WC04"
                     elif "(3/76=1000001189,3/77=0961409999,3/78=0000109999)" in line: w="WP04"
                     else: w="Iop"
+                    print(inp)
+                    print("line 37:",key_nmr,key_opt)
                     if key_nmr == "-": key_opt = key_opt=key_opt.replace("BLYP",w) 
                     if key_opt != "-" and key_nmr != "-": key_nmr =key_nmr.replace("BLYP",w) 
                 if "Magnetic shielding" in line:
                     ter = "Normal"  
                 if "Error" in line: 
                     linea = line
-    keys=[key_opt,key_nmr]
+                fl=fl+1
+    keys.of=key_opt
+    keys.nf=key_nmr
     return ter,linea,keys
 
 def key_compare(key_opt,key_nmr,nmr,opt):
@@ -100,5 +118,6 @@ def terminacion(out):
             print("|%s || %-20s|\n " %(falla[i],error[i]))
         sys.exit(1)
 
+    keys = Level_ot("na", "na", "", "", "", "", "")
     return falla,error,keys
     

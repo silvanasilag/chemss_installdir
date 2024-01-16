@@ -97,7 +97,6 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
                         })
     if os.path.isfile(tbl_compf)== True:
         df = pd.read_csv (tbl_compf)
-        # df=df.drop(['Unnamed: 0'], axis=1)
         dff=pd.concat([df,df1])
         dff=dff.drop_duplicates()
         dff.to_csv(tbl_compf,index=False)

@@ -1,25 +1,18 @@
 #!/usr/local/anaconda3/bin/python
 # -*- coding: utf-8 -*-
-
 #Silvana Silva Aguirre, CINVESTAV Unidad Mérida,2019
 
 ##modulos
 import sys
 import os
-#from os import path
 import glob
 import time
 import shutil
 
-print("test2")
-
 from nmrutils.getbilparam     import get_a_str, get_a_int, get_a_float
-# from nmrutils.regression      import regression
-
 from runrun.qpbs              import send_pbs_files_to_queue
 from nmrutils.terminacion     import terminacion
 from nmrutils.isotropicreader import molecules_data
-#from nmrutils.get_geometry    import get_geo, write_xyz
 from nmrutils.getbilparam     import read_block_of_inp
 from runrun.chemssinput_writer import chemss_inp,chemssinp_edit
 
@@ -81,7 +74,6 @@ def chk_files(key_opt,path,nn):
                 shutil.copyfile(original, target)
             os.system("rm *.chk")
 
-
 def CHESMS():
     r=0
     fname = get_a_str('foldername_base','test')
@@ -105,7 +97,7 @@ def CHESMS():
         os.mkdir(path)
         chk=chms_path
         inp_pbs_writer(path,xyz,chk,nmr,opt) 
-       	os.chdir(path)
+        os.chdir(path)
         # send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
         print('Calculation complete')
@@ -149,11 +141,9 @@ def CHESMS():
         """
         #chk_files(key_opt,path,1)
         chk_files(key_opt_n,path2,0)
-        
     # ·····························································
     if  stat == 'NO' and  calc == 'NO'and new_mol == 'NO'and new_molg =='NO':
         print("Nothing required")
-
     return r
 
     # os.system("rm "+str(path)+"/*.chk")  #scrach de gaussian

@@ -3,7 +3,15 @@ import os
 from os import path
 import glob
 # import datetime
-
+class Level_ot: #Level of theory
+    def __init__(self, opt_fun,opt_base, nmr_fun, nmr_base, dispersion, solv_model, solvent):
+        self.of=opt_fun
+        self.ob=opt_base
+        self.nf=nmr_fun
+        self.nb= nmr_base
+        self.d=dispersion
+        self.sm=solv_model
+        self.sl=solvent
 
 class AtomNMR:
     def __init__(self,num_in_mol,atomic_symbol,signal_exp, signal_theo, residuo, correccion):
@@ -54,6 +62,7 @@ def from_reader(txt, out, mol_id):
     fl=0
     chk=0
     with open(out, 'r') as f2:    #abre el out
+        print("isotropic, line 56", out)
         for line in f2:
             line = line.strip()
             lin = line.split()
@@ -74,6 +83,11 @@ def from_reader(txt, out, mol_id):
             if "Elapsed time:" in line and fl==1: 
                 lin.insert(0,"-")
                 timelaps_nmr=extrac_time(lin)
+    #TERMINACIONNNNN
+    if fl==0:
+        Terminacin ()
+    #TERMINACIONNN
+
     nz,fl=0,0
     with open(txt, 'r') as f:  #txt
         for line in f:
@@ -91,7 +105,6 @@ def from_reader(txt, out, mol_id):
                     #if s =="H" or s=="C":
                     ai=AtomNMR(nz,s,ex,0.0,0.0,0.0)
                     mol0.add_atom(ai)
-
     for i, iatom in enumerate(mol0.atoms):   
         if oslist[i] != iatom.s:
             print('-------------------------ERROR!!',mol0.im)
@@ -99,7 +112,6 @@ def from_reader(txt, out, mol_id):
         else:
             iatom.t = otlist[i]
         #print(iatom.s,iatom.e,iatom.t,iatom.r,iatom.c)
-    
     mol1 = filter_data(mol0)
     for i, iatom in enumerate(mol1.atoms):
         if iatom.s == "H" and iatom.e > 15:

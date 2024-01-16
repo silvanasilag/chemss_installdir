@@ -21,7 +21,7 @@ def make_apbs_gaussian(nproc, ram, queue, walltime, basename):
             pbs.write("                                                                                 \n")
             #pbs.write("env > entorno-$PBS_JOBID.txt                                                     \n")
             pbs.write("export g%sroot=/usr/local/g16_AVX/                                    \n" % gaussian)
-            pbs.write("source $g%sroot/g%s/bsd/g%s.profile                            \n" % (3*(gaussian,)))
+            pbs.write("source $g%sroot/g%s/bsd/g%s.profile                            \n" % ((gaussian,)))
             #pbs.write("export GAUSS_SCRDIR=$PWD/$USER-scratch/$PBS_JOBNAME-$PBS_JOBID                   \n")
             pbs.write("export GAUSS_SCRDIR=/scratch/$USER/$PBS_JOBNAME-$PBS_JOBID                       \n")
             pbs.write("mkdir -p $GAUSS_SCRDIR                                                           \n")
