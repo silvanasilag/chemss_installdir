@@ -44,12 +44,10 @@ def key_compare(key_opt,key_nmr,nmr,opt):
         key_opt.append(opt.upper())
     if opt =="-": f[2]=1
 
-    if f[0] == 1 and x != 0: print("Not the same OPT key words", glist[x], x)
-    if f[1] == 1 and x != 0: print("Not the same NMR key words", glist[x], x)
-    if f[2] == 1: print("Not OPT key check it out", glist[x], x)
-
-
     return key_opt,key_nmr,f
+
+#def key_compare_all():
+
 
 #----------------------------------------------------------------------
 def terminacion(f_err,glist):
@@ -58,8 +56,7 @@ def terminacion(f_err,glist):
     error = []
     nofalla = []
     falla =[]
-    key_opt_f=[]
-    key_nmr_f=[]
+    key_opt_f=[], key_nmr_f=[]
     run_index=glist.index(f_err)
     for x in range(len(glist))[run_index:]:
         innp = glist[x]
@@ -72,6 +69,10 @@ def terminacion(f_err,glist):
             error.append(str(linea))
         if  ter == "normal":
             nofalla.append(innp)
+        if f[0]==1 and x != 0 :print("Not the same OPT key words",glist[x],x)
+        if f[1]==1 and x != 0:print("Not the same NMR key words",glist[x],x)
+        if f[2]==1: print("Not OPT key check it out",glist[x],x)
+
 
         key_opt_f.append((opt,glist[x]))
         key_nmr_f.append((nmr,glist[x]))
