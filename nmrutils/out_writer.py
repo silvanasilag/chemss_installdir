@@ -106,10 +106,10 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
 
 #---------------------------------------------------    
 def out_w(path,data,new,tbl_comp,keys):
-    cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
-    elepsetime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
-    cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
-    elepsetime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0)))
+    cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
+    elepsetime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
+    cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
+    elepsetime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     xhh,xcc,yhh,ycc,cputime,elepsetime,cputime_nmr,elepsetime_nmr = xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr)
     #----------------------------------------------------
     data_h =DataNMR("H", 0, 0, 0, 0)
@@ -203,8 +203,8 @@ def out_w(path,data,new,tbl_comp,keys):
             if len(pc)!= 0 :   
                 rmsdc = (sum(pc)/len(pc))**0.5
                 out.write("rmsd of C: %25.4f \n"%(rmsdc))
-            timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=int(imol.ct[3]))
-            timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
+            timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=round(float(imol.ct[3])))
+            timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=round(float(imol.ct_nmr[3])))
             out.write("Job cpu time for optimization: %s\n"%(timecpu))
             if imol.chk==1: out.write("Chk: YES \n")
             out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
@@ -242,8 +242,8 @@ def out_w(path,data,new,tbl_comp,keys):
         if len(ppc)!= 0 :   
             rmsdc = (sum(ppc)/len(ppc))**0.5
             out.write("general rmsd of C: %25.4f \n"%(rmsdc))
-        timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=int(imol.ct[3]))
-        timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=int(imol.ct_nmr[3]))
+        timecpu=datetime.timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=round(float(imol.ct[3])))
+        timecpu_nmr=datetime.timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=round(float(imol.ct_nmr[3])))
         out.write("Job cpu time for optimization: %s\n"%(timecpu))
         if imol.chk==1: out.write("Chk: YES \n")
         out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))

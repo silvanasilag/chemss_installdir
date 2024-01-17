@@ -123,10 +123,10 @@ def CHESMS():
     if stat == 'YES' and new_mol =="NO":
         r=3
         exist(path,False)
-        falla,error,keys = terminacion(path)
-        data = molecules_data(path,dnmr)
-        data2  = []
-        key_opt=out_w(path,data,data2,tbl_comp,keys)
+        #falla,error,keys = terminacion(path)
+        data,keys = molecules_data(path,dnmr)
+        path2=[]
+        key_opt=out_w(path,data,path2,tbl_comp,keys)
         chk_files(key_opt,path,1)
     # ·····························································
     if new_mol =="YES":
@@ -136,7 +136,8 @@ def CHESMS():
         # falla,error,opt,nmr = terminacion(path)
         #falla,error,keys= terminacion(path2)
         # data = molecules_data(path,dnmr)
-        data2 = molecules_data(path2,str(work_dir+"/nw_ds"))
+        keys=["-","-"]
+        data2,keys = molecules_data(path2,str(work_dir+"/nw_ds"))
         key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
         # key_opt_n=out_w(path2,data,data2,tbl_comp) #scale factor perform with just the base dataset
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 

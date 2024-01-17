@@ -2,8 +2,19 @@ import sys
 import os
 from os import path
 import glob
-# import datetime
-
+import datetime
+from nmrutils.terminacion     import terminacion,key_compare,key_compare_all
+"""
+class Level_theory:
+    def __init__(self,opt_fun,opt_base,nmr_fun,nmr_base, dispersion, solvent, solv_method):
+        self.opf = opt_fun
+        self.opb = opt_base
+        self.nmrf= nmr_fun
+        self.nmrb = nmr_base
+        self.g0 = dispersion
+        self.sol= solvent
+        self.sol_m= solv_method
+"""
 
 class AtomNMR:
     def __init__(self,num_in_mol,atomic_symbol,signal_exp, signal_theo, residuo, correccion):
@@ -44,8 +55,8 @@ def extrac_time(lin):
     (d,h,m,s)=(int(lin[3]), int(lin[5]), int(lin[7]), float(lin[9]))
     return (d,h,m,s)
 
-def from_reader(txt, out, mol_id):
-    oslist, otlist=[], []
+def from_reader(txt, out, mol_id,filesout,key_opt,key_nmr):
+    oslist, otlist=[],[]
     time=0
     timecpu=(0,0,0,0)
     timelaps=(0,0,0,0)
@@ -54,19 +65,35 @@ def from_reader(txt, out, mol_id):
     fl=0
     chk=0
     with open(out, 'r') as f2:    #abre el out
+        nmr,opt="-","-"
         for line in f2:
             line = line.strip()
             lin = line.split()
             os = 'X'
-            if "#" and "OPT" and "Geom=Check" in line: 
-                chk=1
+            if str("#")  and str("OPT") in line and opt=="-":
+                opt =line
+                if  "Geom=Check" in line:
+                    chk=1
+                    opt=opt.strip(' Guess=Read')
+                    opt=opt.strip(' Geom=Check')
+            if str("#") and str("NMR")in line and nmr=="-":
+                nmr=line
+                nmr=nmr.strip(' Guess=Read')
+                nmr=nmr.strip(' Geom=Check')
+            if str("#") and str("IOP")in line.upper() : 
+                if "(3/76=1000007400,3/77=0999900001,3/78=0000109999)" in line: w="WC04"
+                elif "(3/76=1000001189,3/77=0961409999,3/78=0000109999)" in line: w="WP04"
+                else: w="Iop"
+                if nmr == "-": opt = opt=opt.replace("BLYP",w) 
+                if opt != "-" and nmr != "-": nmr =nmr.replace("BLYP",w) 
             if "Isotropic" in line and len(lin)==8:
                 fl=1
                 ot=float(lin[4])
                 os=str(lin[1])
                 oslist.append(os) #appendiza simbolo del atomo
                 otlist.append(ot) #appendiza las valor isotropico
-            if "Job cpu time:" in line and fl==0: timecpu=extrac_time(lin)
+            if "Job cpu time:" in line and fl==0:
+                timecpu=extrac_time(lin)
             if "Elapsed time:" in line and fl==0: 
                 lin.insert(0,"-")
                 timelaps=extrac_time(lin)
@@ -74,6 +101,9 @@ def from_reader(txt, out, mol_id):
             if "Elapsed time:" in line and fl==1: 
                 lin.insert(0,"-")
                 timelaps_nmr=extrac_time(lin)
+
+    key_opt,key_nmr=key_compare(key_opt,key_nmr,nmr,opt,out)
+    if fl==0:terminacion(out,filesout)
     nz,fl=0,0
     with open(txt, 'r') as f:  #txt
         for line in f:
@@ -99,12 +129,12 @@ def from_reader(txt, out, mol_id):
         else:
             iatom.t = otlist[i]
         #print(iatom.s,iatom.e,iatom.t,iatom.r,iatom.c)
-    
+
     mol1 = filter_data(mol0)
     for i, iatom in enumerate(mol1.atoms):
         if iatom.s == "H" and iatom.e > 15:
             sys.exit("Error")
-    return {'mol':mol1}
+    return {'mol':mol1,'kys':[opt,nmr],'keys':[key_opt,key_nmr]}
 #----------------------------------------------------------------------------------------------
 def filter_data(mol0): 
     av,ex,iso,s,nz,nn=[],[],[],[],[],[] #l
@@ -156,6 +186,8 @@ def molecules_data(path1,path2):
     filestxt = []
     namemol =[]
     moleculeout=[] 
+    key_opt,key_nmr=[],[]
+    key_opt_f,key_nmr_f=[],[]
     os.chdir(path1)
     for iifile in glob.glob("*.out"): 
         mol = os.path.splitext(os.path.basename(iifile))[0]
@@ -181,8 +213,14 @@ def molecules_data(path1,path2):
         print(filestxt,len(filestxt))
         sys.exit(1)
     for i, j, k in zip(filestxt,filesout,namemol):
-        reader=from_reader(i, j, k)
+        reader=from_reader(i, j, k,filesout,key_opt,key_nmr)
+        keys=reader['kys']
         molx = reader['mol']
-        moleculeout.extend([molx])    
-    return moleculeout
+        key_opt,key_nmr=reader['keys'][0],reader['keys'][1]
+        moleculeout.extend([molx])
+        key_opt_f.append((keys[0],k))
+        key_nmr_f.append((keys[1],k))
+    if len(key_opt)!=1 : key_compare_all(key_opt,key_opt_f)
+    if len(key_nmr)!=1 :key_compare_all(key_nmr,key_nmr_f)
+    return moleculeout,keys
 #------------------------------------------------FILTRAR
