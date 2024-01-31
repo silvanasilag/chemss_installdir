@@ -4,6 +4,8 @@
 ##modulos
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
+import os
 
 from scipy import stats
 from sklearn.metrics import mean_squared_error
@@ -41,6 +43,17 @@ def xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr):
     return xn_h,xn_c,yn_h,yn_c,cputime,elepsetime,cputime_nmr,elepsetime_nmr
 #--------------------------------------------------- 
 def stat(x,y,data):
+    #-----------------------------------create cvs 
+    datos = list(zip(x, y))
+    print(os.getcwd())
+    ruta_archivo = "datos_xy.csv"
+    with open(ruta_archivo, 'w', newline='') as archivo_csv:
+    # Crear un objeto escritor CSV
+        escritor_csv = csv.writer(archivo_csv)
+    # Escribir los datos en el archivo CSV
+        escritor_csv.writerow(["Chemical Shift", "Isotropic Values"])  # Escribir encabezados
+        escritor_csv.writerows(datos)
+    #-----------------------------------create cvs 
     yscal = []
     print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
