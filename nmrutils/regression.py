@@ -88,6 +88,7 @@ def splot(x, y,fname,slope,inter,r2,name,clr):
     for ix in l:
         cc = inter + slope * ix
         c.append(cc)   
+    plt.clf()
     plt.plot(x, y, 'o',color=clr)
     plt.plot(l, c,'-k', lw=1.2)
     plt.xlabel('Experimental Chimical Shifts')
