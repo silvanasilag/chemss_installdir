@@ -17,7 +17,7 @@ from nmrutils.terminacion import from_reader
 from nmrutils.regression import scale,stat,splot,xy
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
-from nmrutils.getbilparam     import  get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
+from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -97,7 +97,6 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
                         })
     if os.path.isfile(tbl_compf)== True:
         df = pd.read_csv (tbl_compf)
-        # df=df.drop(['Unnamed: 0'], axis=1)
         dff=pd.concat([df,df1])
         dff=dff.drop_duplicates()
         dff.to_csv(tbl_compf,index=False)
