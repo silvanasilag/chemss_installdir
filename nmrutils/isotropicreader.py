@@ -63,14 +63,13 @@ def neighbor_finder(adj_mtx):
         contb = 0
         for j in i:
             if j == 1:
-                neig.append(contb)
+                neig.append(contb+1)
             contb = contb + 1
-        dict_neig[conta] = neig
+        dict_neig[conta+1] = neig
         # print(conta,neig)
         conta = conta + 1
-        if len(neig)==3:
-            print(conta-1,":",neig)
 
+    print(dict_neig)
     return dict_neig
 
 def flotante(variable):
@@ -121,12 +120,12 @@ def from_reader(txt, out, mol_id):
     #TERMINACIONNN
 
     # -----VECINOSSS
-    x = get_geometry_gaussian(out,0)
+    x = get_geometry_gaussian("",out,0)
     xmtx = conectmx(x)
     nbs = neighbor_finder(xmtx)
     # -----VECINOSSS
 
-    nz,fl=0,0
+    nz,fl,simb=0,0,[]
     with open(txt, 'r') as f:  #txt
         for line in f:
             line = line.strip()
@@ -141,9 +140,9 @@ def from_reader(txt, out, mol_id):
                     s=str(lin[0])
                     ex=str(lin[1])
                     #if s =="H" or s=="C":
-                    print(nz,":",nbs[nz])
-                    ai=AtomNMR(nz,s,ex,0.0,0.0,0.0,[])
+                    ai=AtomNMR(nz,s,ex,0.0,0.0,0.0,nbs[nz])
                     mol0.add_atom(ai)
+                    simb.append(s)
     for i, iatom in enumerate(mol0.atoms):   
         if oslist[i] != iatom.s:
             print('-------------------------ERROR!!',mol0.im)
@@ -153,6 +152,10 @@ def from_reader(txt, out, mol_id):
         #print(iatom.s,iatom.e,iatom.t,iatom.r,iatom.c)
     mol1 = filter_data(mol0)
     for i, iatom in enumerate(mol1.atoms):
+        nnb=[]
+        for k in iatom.nb:nnb.append(simb[k-1])
+        print(iatom.s,":",nnb)
+
         if iatom.s == "H" and iatom.e > 15:
             sys.exit("Error")
     return {'mol':mol1}
