@@ -55,6 +55,7 @@ def stat(x,y,data):
         escritor_csv.writerows(datos)
     #-----------------------------------create cvs 
     yscal = []
+    """
     print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
     data.r2 = r_value**2
@@ -63,6 +64,14 @@ def stat(x,y,data):
         yscal.append(ys)
     data.rmsd = (mean_squared_error(x,yscal))**0.5
     print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))
+    """
+    data.m, data.b, r_value, p_value, std_err = stats.linregress(y,x)
+    data.r2 = r_value**2
+    for i in range(len(y)):
+        ys = (data.b +(y[i])*data.m)
+        yscal.append(ys)
+    data.rmsd = (mean_squared_error(x,yscal))**0.5
+    print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))    
     return data
 #--------------------------------------------------- 
 def scale(data, data_h,data_c):
