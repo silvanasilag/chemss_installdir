@@ -1,7 +1,10 @@
 import sys
 import os
 from os import path
+from glomos_utils.get_geometry  import get_geometry_gaussian
+from glomos_utils.connectivity import conectmx
 import glob
+
 # import datetime
 class Level_ot: #Level of theory
     def __init__(self, opt_fun,opt_base, nmr_fun, nmr_base, dispersion, solv_model, solvent):
@@ -14,13 +17,14 @@ class Level_ot: #Level of theory
         self.sl=solvent
 
 class AtomNMR:
-    def __init__(self,num_in_mol,atomic_symbol,signal_exp, signal_theo, residuo, correccion):
+    def __init__(self,num_in_mol,atomic_symbol,signal_exp, signal_theo, residuo, correccion,neighbors):
         self.nz=num_in_mol
         self.s=atomic_symbol
         self.e=signal_exp
         self.t=signal_theo
         self.r=residuo
         self.c=correccion
+        self.nb=neighbors
 #------------------------------------------------------------------------------------------
 class MoleculeNMR:
     def __init__(self, name,cpu_time,elapse_time,cpu_time_nmr,elapse_time_nmr,rmsd,mol_id,chk):
@@ -41,6 +45,34 @@ class MoleculeNMR:
     def __repr__(self):
         self=sorted(self, key=lambda atomm: atomm.s) 
 #------------------------------------------------------------------------------------------
+def neighbor_finder(adj_mtx):
+    '''
+    This function builds a dictionary that contains the neighbors of all atoms
+
+    in: adj_mtx (list); a list of list elements that represent the adjacency matrix 
+        of the molecule as a graph.
+    out: dict_neig (dict); a dictionary containing as keys the position of the atom 
+        in the molecule.atoms list, and as values a list of all its neighbors.
+        ({0:[1,3,7,11], 1:[0,7],...})
+    '''
+    dict_neig = {}
+    conta = 0
+    print(adj_mtx)
+    for i in adj_mtx:
+        neig = []
+        contb = 0
+        for j in i:
+            if j == 1:
+                neig.append(contb)
+            contb = contb + 1
+        dict_neig[conta] = neig
+        # print(conta,neig)
+        conta = conta + 1
+        if len(neig)==3:
+            print(conta-1,":",neig)
+
+    return dict_neig
+
 def flotante(variable):
     try:
         float(variable)
@@ -88,6 +120,12 @@ def from_reader(txt, out, mol_id):
         Terminacin ()
     #TERMINACIONNN
 
+    # -----VECINOSSS
+    x = get_geometry_gaussian(out,0)
+    xmtx = conectmx(x)
+    nbs = neighbor_finder(xmtx)
+    # -----VECINOSSS
+
     nz,fl=0,0
     with open(txt, 'r') as f:  #txt
         for line in f:
@@ -103,7 +141,8 @@ def from_reader(txt, out, mol_id):
                     s=str(lin[0])
                     ex=str(lin[1])
                     #if s =="H" or s=="C":
-                    ai=AtomNMR(nz,s,ex,0.0,0.0,0.0)
+                    print(nz,":",nbs[nz])
+                    ai=AtomNMR(nz,s,ex,0.0,0.0,0.0,[])
                     mol0.add_atom(ai)
     for i, iatom in enumerate(mol0.atoms):   
         if oslist[i] != iatom.s:
@@ -123,6 +162,7 @@ def filter_data(mol0):
     is_v=-200
     name=""
     mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.et,mol0.ct_nmr,mol0.et_nmr,mol0.rmsd,mol0.im,mol0.chk)
+
     for i,iatom in enumerate(mol0.atoms):
         ex.append(iatom.e)
         iso.append(iatom.t)
@@ -156,7 +196,7 @@ def filter_data(mol0):
             is_v=round(is_v, 4)
             for ii in range(len(nz)):
                     name=name+str(nz[ii])+","
-            a=AtomNMR(name[:-1],s[i],float(ex[i]),is_v,0.0,0.0)  
+            a=AtomNMR(name[:-1],s[i],float(ex[i]),is_v,0.0,0.0,[])  
             av,nz=[],[]
             name=""
             mol1.add_atom(a)
