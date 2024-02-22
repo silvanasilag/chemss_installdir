@@ -234,5 +234,5 @@ def molecules_data(path1,path2):
         reader=from_reader(i, j, k)
         molx = reader['mol']
         moleculeout.extend([molx])    
-    return moleculeout
+    return moleculeout,"borrar"
 #------------------------------------------------FILTRAR
