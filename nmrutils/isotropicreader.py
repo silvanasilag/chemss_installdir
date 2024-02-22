@@ -57,7 +57,6 @@ def neighbor_finder(adj_mtx):
     '''
     dict_neig = {}
     conta = 0
-    print(adj_mtx)
     for i in adj_mtx:
         neig = []
         contb = 0
@@ -68,8 +67,6 @@ def neighbor_finder(adj_mtx):
         dict_neig[conta+1] = neig
         # print(conta,neig)
         conta = conta + 1
-
-    print(dict_neig)
     return dict_neig
 
 def flotante(variable):
@@ -152,25 +149,23 @@ def from_reader(txt, out, mol_id):
         #print(iatom.s,iatom.e,iatom.t,iatom.r,iatom.c)
     mol1 = filter_data(mol0)
     for i, iatom in enumerate(mol1.atoms):
-        nnb=[]
-        for k in iatom.nb:nnb.append(simb[k-1])
-        print(iatom.s,":",nnb)
-
+        nnb = [simb[k - 1] for k in iatom.nb]     
+        iatom.nb = nnb
         if iatom.s == "H" and iatom.e > 15:
             sys.exit("Error")
     return {'mol':mol1}
 #----------------------------------------------------------------------------------------------
 def filter_data(mol0): 
-    av,ex,iso,s,nz,nn=[],[],[],[],[],[] #l
+    av,ex,iso,s,nz,nn,nbh=[],[],[],[],[],[],[] #l
     is_v=-200
     name=""
     mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.et,mol0.ct_nmr,mol0.et_nmr,mol0.rmsd,mol0.im,mol0.chk)
-
     for i,iatom in enumerate(mol0.atoms):
         ex.append(iatom.e)
         iso.append(iatom.t)
         s.append(iatom.s)
         nn.append(iatom.nz)
+        nbh.append(iatom.nb)
     for j in nn:
         i=j-1
         if ex[i]=="Nan":pass
@@ -199,7 +194,7 @@ def filter_data(mol0):
             is_v=round(is_v, 4)
             for ii in range(len(nz)):
                     name=name+str(nz[ii])+","
-            a=AtomNMR(name[:-1],s[i],float(ex[i]),is_v,0.0,0.0,[])  
+            a=AtomNMR(name[:-1],s[i],float(ex[i]),is_v,0.0,0.0,nbh[i])  
             av,nz=[],[]
             name=""
             mol1.add_atom(a)
