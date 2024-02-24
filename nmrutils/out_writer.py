@@ -18,6 +18,8 @@ from nmrutils.regression import scale,stat,splot,xy
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
+from nmrutils.table_ngbh import tabla_alldataset
+
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -39,7 +41,6 @@ nmr = read_block_of_inp('gaussian nmr') #
 opt = read_block_of_inp('gaussian opt') #
 cola = get_a_str('queue','qintel') #
 nproc = get_a_int('nodes',4) #
-
 
 def kys_changes(lev):
     if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
@@ -137,6 +138,10 @@ def out_w(path,data,new,tbl_comp,keys):
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
+    #---------------------------------------------------    
+    # writer table for xy all data. 
+    tabla_alldataset(path, data)
+    #---------------------------------------------------
     out =str(path)+"/scaled_hormons.txt"
     out=open(out,'a')
     out.write("CHEMical Shift Scaler\n\n")

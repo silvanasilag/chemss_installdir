@@ -153,6 +153,7 @@ def from_reader(txt, out, mol_id):
         iatom.nb = nnb
         if iatom.s == "H" and iatom.e > 15:
             sys.exit("Error")
+        print(iatom.nz,"",iatom.s,":",iatom.nb)
     return {'mol':mol1}
 #----------------------------------------------------------------------------------------------
 def filter_data(mol0): 
