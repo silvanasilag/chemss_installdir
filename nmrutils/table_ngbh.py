@@ -5,13 +5,13 @@ import os
 def tabla_alldataset(name, data):
     df1 = pd.DataFrame({"Z":[],
                         "Isotropic Values":[],
-                        "Chemecal shift":[],
-                        "-H": [],
-                        "-C": [],
-                        "-Cl": [],
-                        "-O":[],
-                        "-N" :[],
-                        "-F" :[],
+                        "Chemical Shift":[],
+                        "H-": [],
+                        "C-": [],
+                        "Cl-": [],
+                        "O-":[],
+                        "N-" :[],
+                        "F-" :[],
                         "Single":[],
                         "Dobles" :[],
                         "Triple":[]
@@ -23,13 +23,13 @@ def tabla_alldataset(name, data):
             frec={} # Diccionario para contar la frecuencias
             for i in nbs:
                 if i in frec:
-                    frec[i]+= 1
+                    frec[i]+= int(1)
                 else:
-                    frec[i]= 1
+                    frec[i]= int(1)
 
             if iatom.s=="H":
                 s=1
-                frec["single"]=1
+                frec["single"]=int(1)
                 if len(nbs)!=1:
                     print(imol.i,iatom.nz)
                     sys.exit(nbs)
@@ -37,13 +37,13 @@ def tabla_alldataset(name, data):
             if iatom.s=="C":
                 s=6
                 if len(nbs)==4:
-                    frec["single"]=4
+                    frec["single"]=int(4)
                 elif len(nbs)==3:
-                    frec["doble"]=1
-                    frec["single"]=2
+                    frec["doble"]=int(1)
+                    frec["single"]=int(2)
                 elif len(nbs)==2:
-                    frec["triple"]=1
-                    frec["single"]=1
+                    frec["triple"]=int(1)
+                    frec["single"]=int(1)
                 else: 
                     print(imol.i,iatom.nz)
                     sys.exit(nbs)
@@ -52,14 +52,14 @@ def tabla_alldataset(name, data):
             df_1 = {
                     "Z": s,
                     "Isotropic Values":iatom.t,
-                    "Chemecal shift":iatom.e,
-                    "-H": frec.get('H', 0),
-                    "-C": frec.get('C', 0),
-                    "-Cl": frec.get('Cl', 0),
-                    "-O":frec.get('O', 0),
-                    "-N" :frec.get('N', 0),
-                    "-F" :frec.get('F', 0),
-                    "Single":frec.get('doble', 0),
+                    "Chemical Shift":iatom.e,
+                    "H-": frec.get('H', 0),
+                    "C-": frec.get('C', 0),
+                    "Cl-": frec.get('Cl', 0),
+                    "O-":frec.get('O', 0),
+                    "N-" :frec.get('N', 0),
+                    "F-" :frec.get('F', 0),
+                    "Single":frec.get('single', 0),
                     "Dobles" :frec.get('doble', 0),
                     "Triple":frec.get('triple', 0),
                     }
