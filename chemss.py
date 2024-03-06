@@ -125,11 +125,11 @@ def CHESMS():
         exist(path2,False)
         # falla,error,opt,nmr = terminacion(path)
         #falla,error,keys= terminacion(path2)
-        # data = molecules_data(path,dnmr)
         keys=["-","-"]
+        data,keys= molecules_data(path,dnmr)
         data2,keys = molecules_data(path2,str(work_dir+"/nw_ds"))
-        key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
-        # key_opt_n=out_w(path2,data,data2,tbl_comp) #scale factor perform with just the base dataset
+        # key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
+        key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
         # data3=data+data2
         # key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
