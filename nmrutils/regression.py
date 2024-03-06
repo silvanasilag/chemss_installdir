@@ -55,7 +55,7 @@ def stat(x,y,data):
         escritor_csv.writerows(datos)
     #-----------------------------------create cvs 
     yscal = []
-    """
+    
     print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
     data.r2 = r_value**2
@@ -71,7 +71,8 @@ def stat(x,y,data):
         ys = (data.b +(y[i])*data.m)
         yscal.append(ys)
     data.rmsd = (mean_squared_error(x,yscal))**0.5
-    print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))    
+    print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))
+    """    
     return data
 #--------------------------------------------------- 
 def scale(data, data_h,data_c):
@@ -95,7 +96,7 @@ def splot(x, y,fname,slope,inter,r2,name,clr):
     xx = sorted(x)  
     l = np.linspace(xx[0],xx[-1], 100)
     for ix in l:
-        cc = inter + slope * ix
+        cc = inter + (slope * ix)
         c.append(cc)   
     plt.clf()
     plt.plot(x, y, 'o',color=clr)
@@ -104,4 +105,5 @@ def splot(x, y,fname,slope,inter,r2,name,clr):
     plt.ylabel('Computed Isotropic Values')
     plt.title(name)
     plt.savefig(fname, dpi=700, facecolor='w', edgecolor='w', format= 'png')
+
 #---------------------------------------------------    

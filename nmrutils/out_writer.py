@@ -123,7 +123,8 @@ def out_w(path,data,new,tbl_comp,keys):
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     if len(new) != 0:
         scale(new, data_h, data_c)
-        xn_h,xn_c,yn_h,yn_c,cputime,elepsetime =xy(new,cputime,elepsetime)
+    
+        xn_h,xn_c,yn_h,yn_c,cputime,elepsetime,cputime_nmr,elepsetime_nmr =xy(new,cputime,elepsetime,cputime_nmr,elepsetime_nmr)
     #---------------------------------------------------Escribe los  archivos out finales     
     os.chdir(path)
     out=(glob.glob("*.out"))
