@@ -55,7 +55,6 @@ def stat(x,y,data):
         escritor_csv.writerows(datos)
     #-----------------------------------create cvs 
     yscal = []
-    
     print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
     data.r2 = r_value**2
