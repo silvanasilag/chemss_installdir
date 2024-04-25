@@ -54,7 +54,7 @@ def kys_changes(lev):
 
 #--------------------------------------------------- 
 
-def comp_table(tbl_comp,data_c,data_h,keys,path):
+def comp_table(tbl_comp,data_c,data_h,keys,path,timecpu,timecpu_nmr):
     os.chdir("..")
     # print(os.getcwd())
     kop=str(keys[0]).split("_")
@@ -94,6 +94,8 @@ def comp_table(tbl_comp,data_c,data_h,keys,path):
                         "intercept C13":[round(data_c.b,4)],
                         "RMSD C13" :[round(data_c.rmsd,4)],
                         "R^2 C13" :[round(data_c.r2,4)],
+                        "OPT Cpu time":timecpu,
+                        "NMR Cpu time":timecpu_nmr,
                         })
     if os.path.isfile(tbl_compf)== True:
         df = pd.read_csv (tbl_compf)
@@ -251,6 +253,6 @@ def out_w(path,data,new,tbl_comp,keys):
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
     out.close
     dats = [data_h,data_c]
-    if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
+    if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]),timecpu,timecpu_nmr)
     
     return keys[0]
