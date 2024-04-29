@@ -22,10 +22,20 @@ def tabla_alldataset(name, data):
     out.write("CHEMical Shift Scaler neighbors analisis \n\n")
     out.write("Atom   Nuclei   neighbors   Single bond  Double bond   Triple bond")
     for imol in data:
+        print(imol.i)
         out.write("\n------------------------------------\n")
         out.write("%s\n"%(imol.im))
         out.write("%s\n"%(imol.i))
         for iatom in imol.atoms:
+            print(imol.i,iatom.s,iatom.t)
+            if not (iatom.s == 'H' or iatom.s == 'C'): 
+                print("PANICO SATANICOOO",iatom.s )
+            if iatom.t  == 681.3693:
+                print("AHHHHHHH!!!!----------------------------------")
+                print(iatom.s)
+                print(imol.i)
+                print(iatom.nz)
+
             nbs=iatom.nb
             frec={} # Diccionario para contar la frecuencias
             for i in nbs:
@@ -34,14 +44,15 @@ def tabla_alldataset(name, data):
                 else:
                     frec[i]= int(1)
 
-            if iatom.s=="H":
+            if iatom.s=='H':
+                if iatom.t  == 681.3693:print("AHHHHHHH!!!!---------------------------------11-")
                 s=1
                 frec["single"]=int(1)
                 if len(nbs)!=1:
-                    print(iatom.i,iatom.nz)
                     sys.exit(nbs)
             
-            if iatom.s=="C":
+            if iatom.s=='C':
+                if iatom.t  == 681.3693:print("AHHHHHHH!!!!---------------------------------2-")
                 s=6
                 if len(nbs)==4:
                     frec["single"]=int(4)
@@ -52,7 +63,6 @@ def tabla_alldataset(name, data):
                     frec["triple"]=int(1)
                     frec["single"]=int(1)
                 else: 
-                    print(imol.i,iatom.nz)
                     sys.exit(nbs)
             out.write('\n'+iatom.nz+" "+iatom.s+" : "+str(iatom.nb)+"  s:"+str(frec.get('single', 0))+"  d:"+str(frec.get('doble', 0))+"  t:"+str(frec.get('triple', 0)))
             #out.write('{0: >-18.4}{1: >16.2}{2: >-17.2}{3: >-18.4}{4: >-18.4}\n'.format(imol.i,iatom.nz,frec.get('single', 0),frec.get('doble', 0),frec.get('triple', 0)))

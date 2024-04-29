@@ -46,7 +46,6 @@ class MoleculeNMR:
         self=sorted(self, key=lambda atomm: atomm.s) 
 #------------------------------------------------------------------------------------------
 def neighbor_finder(adj_mtx):
-    print(adj_mtx)
     '''
     This function builds a dictionary that contains the neighbors of all atoms
 
@@ -68,7 +67,6 @@ def neighbor_finder(adj_mtx):
         dict_neig[conta+1] = neig
         # print(conta,neig)
         conta = conta + 1
-        print(dict_neig)
     return dict_neig
 
 def flotante(variable):
@@ -92,7 +90,6 @@ def from_reader(txt, out, mol_id):
     fl=0
     chk=0
     with open(out, 'r') as f2:    #abre el out
-        print("isotropic, line 56", out)
         for line in f2:
             line = line.strip()
             lin = line.split()

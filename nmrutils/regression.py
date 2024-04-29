@@ -75,7 +75,6 @@ def stat(x,y,data):
     return data
 #--------------------------------------------------- 
 def scale(data, data_h,data_c):
-    print("data")
     for imol in data:
         for iatom in imol.atoms:
             symbol= iatom.s

@@ -140,7 +140,6 @@ def out_w(path,data,new,tbl_comp,keys):
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
     #---------------------------------------------------    
     # writer table for xy all data. 
-    tabla_alldataset(path, data)
     #---------------------------------------------------
     out =str(path)+"/scaled_hormons.txt"
     out=open(out,'a')
@@ -212,11 +211,13 @@ def out_w(path,data,new,tbl_comp,keys):
             out.write("Job cpu time for optimization: %s\n"%(timecpu))
             if imol.chk==1: out.write("Chk: YES \n")
             out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
+            tabla_alldataset(path, data)
 
     else:
         pph=[]
         ppc=[]
         for imol in new:
+            print("prev:",imol.i)
             out.write("------------------------------------\n")
             out.write("%s\n"%(imol.im))
             out.write("%s\n"%(imol.i))
@@ -251,11 +252,13 @@ def out_w(path,data,new,tbl_comp,keys):
         out.write("Job cpu time for optimization: %s\n"%(timecpu))
         if imol.chk==1: out.write("Chk: YES \n")
         out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
+        print("new")
+        tabla_alldataset(path, new)
+
 
     out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
     out.close
-    dats = [data_h,data_c]
     if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]))
-    
+    print("outt")
     return keys[0]
