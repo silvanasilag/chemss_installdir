@@ -27,14 +27,9 @@ def tabla_alldataset(name, data):
         out.write("%s\n"%(imol.im))
         out.write("%s\n"%(imol.i))
         for iatom in imol.atoms:
-            print(imol.i,iatom.s,iatom.t)
-            if not (iatom.s == 'H' or iatom.s == 'C'): 
+            if not (iatom.s == 'H' or iatom.s == 'C'):
+                print(imol.i,iatom.s,iatom.t) 
                 print("PANICO SATANICOOO",iatom.s )
-            if iatom.t  == 681.3693:
-                print("AHHHHHHH!!!!----------------------------------")
-                print(iatom.s)
-                print(imol.i)
-                print(iatom.nz)
 
             nbs=iatom.nb
             frec={} # Diccionario para contar la frecuencias

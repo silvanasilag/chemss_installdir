@@ -211,7 +211,7 @@ def out_w(path,data,new,tbl_comp,keys):
             out.write("Job cpu time for optimization: %s\n"%(timecpu))
             if imol.chk==1: out.write("Chk: YES \n")
             out.write("Job cpu time for NMR: %s\n"%(timecpu_nmr))
-            tabla_alldataset(path, data)
+        tabla_alldataset(path, data)
 
     else:
         pph=[]

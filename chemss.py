@@ -111,6 +111,7 @@ def CHESMS():
         send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
     if stat == 'YES' and new_mol =="NO":
+        print("3")
         r=3
         exist(path,False)
         #falla,error,keys = terminacion(path)
@@ -120,6 +121,7 @@ def CHESMS():
         chk_files(key_opt,path,1)
     # ·····························································
     if new_mol =="YES":
+        print("4")
         r=4
         # exist(path,False)
         exist(path2,False)
