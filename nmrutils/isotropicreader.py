@@ -26,14 +26,12 @@ class AtomNMR:
         self.c=correccion
 #------------------------------------------------------------------------------------------
 class MoleculeNMR:
-    def __init__(self, name,cpu_time,elapse_time,cpu_time_nmr,elapse_time_nmr,rmsd,mol_id,chk):
+    def __init__(self, name,cpu_time,cpu_time_nmr,rmsd,mol_id,chk):
         self.atoms = []
         self.i = name
         self.n = 0
         self.ct=cpu_time
-        self.et=elapse_time
         self.ct_nmr=cpu_time_nmr
-        self.et_nmr=elapse_time_nmr
         self.rmsd=rmsd
         self.im=mol_id
         self.chk=chk
@@ -59,9 +57,7 @@ def from_reader(txt, out, mol_id,filesout,key_opt,key_nmr):
     oslist, otlist=[],[]
     time=0
     timecpu=(0,0,0,0)
-    timelaps=(0,0,0,0)
     timecpu_nmr=(0,0,0,0)
-    timelaps_nmr=(0,0,0,0)
     fl=0
     chk=0
     with open(out, 'r') as f2:    #abre el out
@@ -94,13 +90,8 @@ def from_reader(txt, out, mol_id,filesout,key_opt,key_nmr):
                 otlist.append(ot) #appendiza las valor isotropico
             if "Job cpu time:" in line and fl==0:
                 timecpu=extrac_time(lin)
-            if "Elapsed time:" in line and fl==0: 
-                lin.insert(0,"-")
-                timelaps=extrac_time(lin)
-            if "Job cpu time:" in line and fl==1: timecpu_nmr=extrac_time(lin)
-            if "Elapsed time:" in line and fl==1: 
-                lin.insert(0,"-")
-                timelaps_nmr=extrac_time(lin)
+            if "Job cpu time:" in line and fl==1: 
+                timecpu_nmr=extrac_time(lin)
 
     key_opt,key_nmr=key_compare(key_opt,key_nmr,nmr,opt,out)
     if fl==0:terminacion(out,filesout)
@@ -111,7 +102,7 @@ def from_reader(txt, out, mol_id,filesout,key_opt,key_nmr):
             lin = line.split()
             if fl == 0:
                 name=line
-                mol0=MoleculeNMR(name,timecpu,timelaps,timecpu_nmr,timelaps_nmr,0.0,mol_id,chk)
+                mol0=MoleculeNMR(name,timecpu,timecpu_nmr,0.0,mol_id,chk)
                 fl=1
             if len(lin)>1:
                 if flotante(lin[1])==True or "=" in line or "Nan" in line:
@@ -140,7 +131,7 @@ def filter_data(mol0):
     av,ex,iso,s,nz,nn=[],[],[],[],[],[] #l
     is_v=-200
     name=""
-    mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.et,mol0.ct_nmr,mol0.et_nmr,mol0.rmsd,mol0.im,mol0.chk)
+    mol1=MoleculeNMR(mol0.i,mol0.ct,mol0.ct_nmr,mol0.rmsd,mol0.im,mol0.chk)
     for i,iatom in enumerate(mol0.atoms):
         ex.append(iatom.e)
         iso.append(iatom.t)

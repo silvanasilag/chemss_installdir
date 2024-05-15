@@ -21,17 +21,13 @@ class DataNMR:
         self.rmsd=rmsd
 
 #--------------------------------------------------- 
-def xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr):
+def xy(data,cputime,cputime_nmr):
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     for imol in data:
-        timecpu=timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=round(float(imol.ct[3])))
-        timelaps=timedelta(days=int(imol.et[0]),hours=int(imol.et[1]), minutes=int(imol.et[2]), seconds=round(float(imol.et[3])))
+        timecpu =   timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=round(float(imol.ct[3])))
         timecpu_nmr=timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=round(float(imol.ct_nmr[3])))
-        timelaps_nmr=timedelta(days=int(imol.et_nmr[0]),hours=int(imol.et_nmr[1]), minutes=int(imol.et_nmr[2]), seconds=round(float(imol.et_nmr[3])))
         cputime= timecpu+cputime
         cputime_nmr= timecpu_nmr+cputime_nmr
-        elepsetime= timelaps + elepsetime
-        elepsetime_nmr= timelaps_nmr + elepsetime_nmr
         for iatom in imol.atoms:
             symbol= iatom.s
             if symbol == "H":
@@ -40,12 +36,11 @@ def xy(data,cputime,elepsetime,cputime_nmr,elepsetime_nmr):
             if symbol == "C":
                 xn_c.append(iatom.e)
                 yn_c.append(iatom.t)
-    return xn_h,xn_c,yn_h,yn_c,cputime,elepsetime,cputime_nmr,elepsetime_nmr
+    return xn_h,xn_c,yn_h,yn_c,cputime,cputime_nmr
 #--------------------------------------------------- 
 def stat(x,y,data):
     #-----------------------------------create cvs 
     datos = list(zip(x, y))
-    print(os.getcwd())
     ruta_archivo = "datos_xy.csv"
     with open(ruta_archivo, 'w', newline='') as archivo_csv:
     # Crear un objeto escritor CSV
@@ -76,7 +71,6 @@ def stat(x,y,data):
     return data
 #--------------------------------------------------- 
 def scale(data, data_h,data_c):
-    print("data")
     for imol in data:
         for iatom in imol.atoms:
             symbol= iatom.s
