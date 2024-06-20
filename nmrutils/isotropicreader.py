@@ -119,10 +119,12 @@ def from_reader(txt, out, mol_id):
     x = get_geometry_gaussian("",out,0)
     xmtx = conectmx(x)
     nbs = neighbor_finder(xmtx)
+    print(nbs)
     # -----VECINOSSS
 
     nz,fl,simb=0,0,[]
     with open(txt, 'r') as f:  #txt
+        print(txt)
         for line in f:
             line = line.strip()
             lin = line.split()
@@ -130,15 +132,18 @@ def from_reader(txt, out, mol_id):
                 name=line
                 mol0=MoleculeNMR(name,timecpu,timelaps,timecpu_nmr,timelaps_nmr,0.0,mol_id,chk)
                 fl=1
-            if len(lin)>1:
+            if len(lin)>1 and lin != 0:
+                print(line)
                 if flotante(lin[1])==True or "=" in line or "Nan" in line:
                     nz=nz+1
                     s=str(lin[0])
                     ex=str(lin[1])
                     #if s =="H" or s=="C":
+                    print(nz,s,ex,nbs[nz])
                     ai=AtomNMR(nz,s,ex,0.0,0.0,0.0,nbs[nz])
                     mol0.add_atom(ai)
                     simb.append(s)
+                print(line)
     for i, iatom in enumerate(mol0.atoms):   
         if oslist[i] != iatom.s:
             print('-------------------------ERROR!!',mol0.im)

@@ -3,26 +3,31 @@ import sys
 import os
 
 def tabla_alldataset(name, data):
-    df1 = pd.DataFrame({"Z":[],
-                        "Isotropic Values":[],
-                        "Chemical Shift":[],
-                        "H-": [],
-                        "C-": [],
-                        "Cl-": [],
-                        "O-":[],
-                        "N-" :[],
-                        "F-" :[],
-                        "Single":[],
-                        "Dobles" :[],
-                        "Triple":[]
-                        })
-    org_e = ['C','H','Cl','O','N','F']
+    atoms_vecinos = []
+    for imol in data:
+        for iatom in imol.atoms:
+            nbs=iatom.nb
+            for n in nbs:
+                atoms_vecinos.append(n)
+    nb=list(set(atoms_vecinos))
+    print("Atomos vecinoss",nb)
+    dic_df = {
+        "Z": [],
+        "Isotropic Values": [],
+        "Chemical Shift": [],
+        "Single": [],
+        "Dobles": [],
+        "Triple": []
+    }
+    for elemento in atoms_vecinos:
+        dic_df[f"{elemento}-"] = []
+    df1 = pd.DataFrame(dic_df)
+
     out =name+"_neighbors_analisis.txt"
     out=open(out,'a')
     out.write("CHEMical Shift Scaler neighbors analisis \n\n")
     out.write("Atom   Nuclei   neighbors   Single bond  Double bond   Triple bond")
     for imol in data:
-        print(imol.i)
         out.write("\n------------------------------------\n")
         out.write("%s\n"%(imol.im))
         out.write("%s\n"%(imol.i))
@@ -63,22 +68,17 @@ def tabla_alldataset(name, data):
             #out.write('{0: >-18.4}{1: >16.2}{2: >-17.2}{3: >-18.4}{4: >-18.4}\n'.format(imol.i,iatom.nz,frec.get('single', 0),frec.get('doble', 0),frec.get('triple', 0)))
             #out.write('{0:-18.4s}{1:16.2s}{2:-17.2s}{3:-18.4s}{4:-18.4s}\n'.format(imol.i,iatom.nz,frec.get('single', 0),frec.get('doble', 0),frec.get('triple', 0)))
 
-            otros=([i for i in nbs if i not in org_e])
             df_1 = {
-                    "Z": s,
-                    "Isotropic Values":iatom.t,
-                    "Chemical Shift":iatom.e,
-                    "H-": frec.get('H', 0),
-                    "C-": frec.get('C', 0),
-                    "Cl-": frec.get('Cl', 0),
-                    "O-":frec.get('O', 0),
-                    "N-" :frec.get('N', 0),
-                    "F-" :frec.get('F', 0),
-                    "Single":frec.get('single', 0),
-                    "Dobles" :frec.get('doble', 0),
-                    "Triple":frec.get('triple', 0),
-                    }
-        
+                "Z": s,
+                "Isotropic Values": iatom.t,
+                "Chemical Shift": iatom.e,
+                "Single": frec.get('single', 0),
+                "Dobles": frec.get('doble', 0),
+                "Triple": frec.get('triple', 0)
+            }
+            for elemento in atoms_vecinos:
+                df_1[f"{elemento}-"] = frec.get(elemento, 0) 
+                
             df_2 = pd.DataFrame([df_1]) # Crear un nuevo DataFrame con los nuevos datos
             df1 = pd.concat([df1, df_2], ignore_index=True) # Concatenar el nuevo DataFrame con el DataFrame existente
 
