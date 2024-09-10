@@ -1,6 +1,6 @@
 #!/usr/local/anaconda3/bin/python
 # -*- coding: utf-8 -*-
-#Silvana Silva Aguirre, CINVESTAV Unidad Mérida,2019
+#Silvana Silva Aguirre, CINVESTAV Unidad Mérida
 
 ##modulos
 import sys
