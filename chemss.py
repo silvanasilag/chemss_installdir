@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #Silvana Silva Aguirre, CINVESTAV Unidad Mérida
 
-##modulos
+##modules
 import sys
 import os
 import glob
@@ -15,20 +15,23 @@ from nmrutils.terminacion     import terminacion
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam     import read_block_of_inp
 from runrun.chemssinput_writer import chemss_inp,chemssinp_edit
+from runrun.inpwriter         import inp_pbs_writer
+from nmrutils.out_writer      import out_w
 
-chms_path= "/Users/silvana/installdir/chemss_installdir/dataset" #path de la base de datos del xyz el dnmr
-work_dir=str(os.getcwdb()) #path de la carpeta desde donde se ejecuta
+chms_path= "/Users/silvana/installdir/chemss_installdir/dataset" #xyz and dnmr database path
+work_dir=str(os.getcwdb()) #working path
 work_dir=work_dir.replace("b'","'")
 work_dir=work_dir.strip("'")
 
 dnmr=str(chms_path +"/dnmr") 
 xyz=str(chms_path+"/xyz")
+silvana=93
 start_time = time.time()
 
-def exist(dirct,n): # hacesr estas banderas más a pueba de tontos
+def exist(dirct,n): # haces estas banderas más a pueba de tontos
     m=0
     if n == True : warning  =str( "\t Existing file ")
-    if n == False : warning  =str( "\t Not existing file") # mensaje de inicio 
+    if n == False : warning  =str( "\t Not existing file") # start massege
     if n== "start" : 
         m=1
         n=False
@@ -55,7 +58,6 @@ def chk_files(key_opt,path,nn):
     outdata=[]
     key_opt=key_opt.replace("/","_")
     os.chdir(path)
-    print("1")
     if len(glob.glob("*.chk")) != 0:
         print("2")
         if nn==1: chk_p = chms_path
@@ -149,47 +151,42 @@ def CHESMS():
 
     # os.system("rm "+str(path)+"/*.chk")  #scrach de gaussian
     # os.system("rm ../*.ER")               #scrach de gaussian            
-    # os.system("rm ../*.OU")          ∫     #scrach de gaussian
+    # os.system("rm ../*.OU")               #scrach de gaussian
 
-exist("INPUTNMR.txt","start")
-
-from runrun.inpwriter         import inp_pbs_writer
-from nmrutils.out_writer      import out_w
-
-scuenc = get_a_str('sequential','NO')
-if scuenc=="YES":
-    exist("sequence.txt","cyc")
-    fil=[]
-    with open("sequence.txt", 'r') as f:
-        for line in f:
-            line = line.strip()
-            lin=line.split("/")
-            if len(lin)==3:
-                fil.append(lin) 
-            elif len(lin)!=0:
-                fil.append(lin) 
-        if len(fil)==1 and "all" in fil[0][0] :
-            print("filtro1")
-            fil_temp=[]
-            dirs = os.listdir(work_dir)
-            dir_list = [i for i in dirs if os.path.isdir(os.path.join(work_dir, i))]
-            dirr_list=dir_list.sort()
-            print(dirr_list)
-            for i in dir_list:
-                if fil[0][0] == "all_base":
-                    ld=[i,'-','-','-']
-                    fil_temp.append(ld)
-                if fil[0][0] == "all_new":
-                    ld=['-',i,'-','-']
-                    fil_temp.append(ld)
-            fil=fil_temp
-    for idata in fil:
-        os.chdir(work_dir)
-        chemssinp_edit(idata)
-        time.sleep(3)
+if __name__ == '__main__':
+    exist("INPUTNMR.txt","start")
+    scuenc = get_a_str('sequential','NO')
+    if scuenc=="YES":
+        exist("sequence.txt","cyc")
+        fil=[]
+        with open("sequence.txt", 'r') as f:
+            for line in f:
+                line = line.strip()
+                lin=line.split("/")
+                if len(lin)==3: fil.append(lin)
+                elif len(lin)!=0: fil.append(lin)
+            if len(fil)==1 and "all" in fil[0][0] :
+                print("filtro1")
+                fil_temp=[]
+                dirs = os.listdir(work_dir)
+                dir_list = [i for i in dirs if os.path.isdir(os.path.join(work_dir, i))]
+                dirr_list=dir_list.sort()
+                print(dirr_list)
+                for i in dir_list:
+                    if fil[0][0] == "all_base":
+                        ld=[i,'-','-','-']
+                        fil_temp.append(ld)
+                    if fil[0][0] == "all_new":
+                        ld=['-',i,'-','-']
+                        fil_temp.append(ld)
+                fil=fil_temp
+        for idata in fil:
+            os.chdir(work_dir)
+            chemssinp_edit(idata)
+            time.sleep(3)
+            r=CHESMS()
+    else:
         r=CHESMS()
-else:
-    r=CHESMS()
 
 # if r==3 or r==4:
     # e = int(time.time() - start_time)
