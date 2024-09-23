@@ -10,13 +10,11 @@ import time
 import shutil
 
 from nmrutils.getbilparam     import get_a_str, get_a_int, get_a_float
-from runrun.qpbs              import send_pbs_files_to_queue
+from runrun.qpbs import send_pbs_files_to_queue, printf
 from nmrutils.terminacion     import terminacion
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam     import read_block_of_inp
 from runrun.chemssinput_writer import chemss_inp,chemssinp_edit
-from runrun.inpwriter         import inp_pbs_writer
-from nmrutils.out_writer      import out_w
 
 chms_path= "/Users/silvana/installdir/chemss_installdir/dataset" #xyz and dnmr database path
 work_dir=str(os.getcwdb()) #working path
@@ -29,29 +27,29 @@ silvana=93
 start_time = time.time()
 
 def exist(dirct,n): # haces estas banderas más a pueba de tontos
+    messages = {
+        True: "\t Existing directory",
+        False: "\t Not existing directory",
+        "start": "CHEMSS 1.0\nPlease fill in the INTPUT.txt file",
+        "cyc": "Please fill in the sequence.txt file"
+    }
     m=0
-    if n == True : warning  =str( "\t Existing file ")
-    if n == False : warning  =str( "\t Not existing file") # start massege
-    if n== "start" : 
-        m=1
-        n=False
-    if n == "cyc":
-        m=2 
-        n=False
+    if n != False and n!= True:
+        m=n
+        n = False
     if os.path.exists(dirct) == n:
-        if m==1:
-            print("CHEMSS 1.0")
-            print("Please fill in the INTPUT.txt file ")
+        if m=="start":
+            print(messages[m])
             chemss_inp()
             if os.path.exists("nw_ds")==False:
                 os.mkdir("nw_ds")
-        elif m==2:
+        elif m=="cyc":
             f = open("sequence.txt", "a")
             f.write("dir_name/ dir_name_new/ OPT Funcional and basis / NMR funcional and basis")
             f.close()
-            print("Please fill in the sequence.txt file ")
+            print(messages[m])
         else:
-            print(warning)
+            print(messages[n],dirct.split("/")[-1])
         sys.exit(1)
 
 def chk_files(key_opt,path,nn):
@@ -76,7 +74,7 @@ def chk_files(key_opt,path,nn):
                 shutil.copyfile(original, target)
             os.system("rm *.chk")
 
-def CHESMS():
+def CHEMSS():
     r=0
     fname = get_a_str('foldername_base','test')
     fname2 = get_a_str('foldername_new','test2')
@@ -91,20 +89,16 @@ def CHESMS():
     opt = read_block_of_inp('gaussian opt')
     path = str(work_dir) + "/"+fname
     path2 = str(work_dir) + "/"+fname2
-    print(new_mol,fname2)
 #---------------------------------------------------
     if calc =='YES':
-        r=1
         exist(path,True)
         os.mkdir(path)
-        chk=chms_path
-        inp_pbs_writer(path,xyz,chk,nmr,opt) 
+        inp_pbs_writer(path,xyz,chms_path,nmr,opt)
         os.chdir(path)
         # send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
         print('Calculation complete')
     if new_molg == "YES":
-        r=2
         exist(path2,True)
         os.mkdir(path2)
         chk=work_dir+"/nw_ds"
@@ -113,16 +107,13 @@ def CHESMS():
         send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
     if stat == 'YES' and new_mol =="NO":
-        r=3
         exist(path,False)
         #falla,error,keys = terminacion(path)
         data,keys = molecules_data(path,dnmr)
-        path2=[]
-        key_opt=out_w(path,data,path2,tbl_comp,keys)
+        key_opt=out_w(path,data,[],tbl_comp,keys)
         chk_files(key_opt,path,1)
     # ·····························································
     if new_mol =="YES":
-        r=4
         # exist(path,False)
         exist(path2,False)
         # falla,error,opt,nmr = terminacion(path)
@@ -135,6 +126,7 @@ def CHESMS():
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
         # data3=data+data2
         # key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
+        if stat == 'YES':  out_w(path,data,[],tbl_comp,keys)
         """
         if key_opt != key_opt_n : 
             print("Not the same level of theory")
@@ -153,8 +145,11 @@ def CHESMS():
     # os.system("rm ../*.ER")               #scrach de gaussian            
     # os.system("rm ../*.OU")               #scrach de gaussian
 
+
 if __name__ == '__main__':
     exist("INPUTNMR.txt","start")
+    from runrun.inpwriter import inp_pbs_writer
+    from nmrutils.out_writer import out_w
     scuenc = get_a_str('sequential','NO')
     if scuenc=="YES":
         exist("sequence.txt","cyc")
@@ -184,9 +179,9 @@ if __name__ == '__main__':
             os.chdir(work_dir)
             chemssinp_edit(idata)
             time.sleep(3)
-            r=CHESMS()
+            r=CHEMSS()
     else:
-        r=CHESMS()
+        r=CHEMSS()
 
 # if r==3 or r==4:
     # e = int(time.time() - start_time)

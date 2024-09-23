@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_16_01_24_17_23__Changes_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chemss.py" beforeDir="false" afterPath="$PROJECT_DIR$/chemss.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nmrutils/isotropicreader.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/isotropicreader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,11 +18,23 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="conectividad" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "silvanasilag"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/silvanasilag/chemss_installdir.git",
+    "accountId": "11d01cf9-3482-49a9-88e6-91fdd9257309"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/chemss.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/nmrutils/get_geometry.py" root0="SKIP_INSPECTION" />
@@ -40,11 +52,11 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Python.chemss.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.chemss.executor&quot;: &quot;Run&quot;,
     &quot;Python.regression-bias.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;merge-conctiv-regressio&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/silvana/installdir/chemss_installdir&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;
   }
