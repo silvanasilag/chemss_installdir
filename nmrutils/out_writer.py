@@ -18,6 +18,9 @@ from nmrutils.regression import scale,stat,splot,xy
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
+from nmrutils.table_ngbh import tabla_alldataset
+from glomos_utils.atomic import Dr_TS
+
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -39,7 +42,6 @@ nmr = read_block_of_inp('gaussian nmr') #
 opt = read_block_of_inp('gaussian opt') #
 cola = get_a_str('queue','qintel') #
 nproc = get_a_int('nodes',4) #
-
 
 def kys_changes(lev):
     if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
@@ -259,7 +261,7 @@ def out_w(path,data,new,tbl_comp,keys):
             print("general rmsd of 13C:",rmsdc)
         if imol.chk==1: out.write("Chk: YES \n")
         if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]),rmsdh,rmsdc,cputime_n,cputime_nmr_n)
-    out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
+    out.write("\n\n %s \n\n"%(Dr_TS())) #random phrasess
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
     out.close
 

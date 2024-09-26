@@ -23,7 +23,6 @@ work_dir=work_dir.strip("'")
 
 dnmr=str(chms_path +"/dnmr") 
 xyz=str(chms_path+"/xyz")
-silvana=93
 start_time = time.time()
 
 def exist(dirct,n): # haces estas banderas más a pueba de tontos
@@ -107,6 +106,7 @@ def CHEMSS():
         send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
     if stat == 'YES' and new_mol =="NO":
+        print("jdjdjdjd")
         exist(path,False)
         #falla,error,keys = terminacion(path)
         data,keys = molecules_data(path,dnmr)
@@ -151,6 +151,7 @@ if __name__ == '__main__':
     from runrun.inpwriter import inp_pbs_writer
     from nmrutils.out_writer import out_w
     scuenc = get_a_str('sequential','NO')
+
     if scuenc=="YES":
         exist("sequence.txt","cyc")
         fil=[]
@@ -181,6 +182,7 @@ if __name__ == '__main__':
             time.sleep(3)
             r=CHEMSS()
     else:
+        print(dnmr, xyz)
         r=CHEMSS()
 
 # if r==3 or r==4:

@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="listo el problema de los iops (prar todos los casos)">
-      <change afterPath="$PROJECT_DIR$/glomos_utils/glomos_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nmrutils/table_ngbh.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nmrutils/isotropicreader.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/isotropicreader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chemss.py" beforeDir="false" afterPath="$PROJECT_DIR$/chemss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nmrutils/out_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/out_writer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nmrutils/terminacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/terminacion.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,18 +31,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "silvanasilag"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;silvanasilag&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/silvanasilag/chemss_installdir.git",
-    "accountId": "11d01cf9-3482-49a9-88e6-91fdd9257309"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/silvanasilag/chemss_installdir.git&quot;,
+    &quot;accountId&quot;: &quot;11d01cf9-3482-49a9-88e6-91fdd9257309&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/chemss.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/nmrutils/get_geometry.py" root0="SKIP_INSPECTION" />
@@ -63,11 +65,16 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;merge-conctiv-regressio&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/silvana/installdir/chemss_installdir&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/silvana/installdir/chemss_installdir/nmrutils&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.chemss">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/nmrutils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.regression-bias">
     <configuration name="chemss" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="chemss_installdir" />
       <option name="ENV_FILES" value="" />

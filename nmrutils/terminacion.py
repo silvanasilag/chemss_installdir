@@ -79,8 +79,6 @@ def terminacion(f_err,glist):
     path = os.path.dirname(f_err)  # Obtener el directorio de la ruta
     os.chdir(path)
     os.chdir("..")
-    #print(f_err)
-    ###AQUIIIIIIIIIIIIIII-------------
     if len(falla) != 0:
         out = str(path)+ "mmmmistake" + ".txt"       #Name of the files with error
         with open(out,'a') as out:
