@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="listo el problema de los iops (prar todos los casos)">
-      <change afterPath="$PROJECT_DIR$/nmrutils/table_ngbh.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chemss.py" beforeDir="false" afterPath="$PROJECT_DIR$/chemss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nmrutils/out_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/out_writer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nmrutils/terminacion.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/terminacion.py" afterDir="false" />
-    </list>
+    <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="listo el problema de los iops (prar todos los casos)" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +18,12 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="conectividad" />
@@ -146,7 +146,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727111285720</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="listo el problema de los iops (prar todos los casos)">
+      <option name="closed" value="true" />
+      <created>1727316726115</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727316726115</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,6 +169,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="ya quedo la extraccion de vecinos y reducir las utilidades de glomos" />
     <MESSAGE value="listo el problema de los iops (prar todos los casos)" />
     <option name="LAST_COMMIT_MESSAGE" value="listo el problema de los iops (prar todos los casos)" />
   </component>
