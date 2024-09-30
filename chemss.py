@@ -106,7 +106,7 @@ def CHEMSS():
         send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
     if stat == 'YES' and new_mol =="NO":
-        print("jdjdjdjd")
+
         exist(path,False)
         #falla,error,keys = terminacion(path)
         data,keys = molecules_data(path,dnmr)

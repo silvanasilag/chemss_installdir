@@ -3,6 +3,7 @@
 # get_covalent_radius(sym)   : RETURNS THE COVALENT RADIUS IN A, BASED ON THE covalent_radius[sym]
 # check_atomic_sym(sym)      : RETURNS TRUE OF FALSE, BASED ON THE chemical_symbols
 # Dr_TS()                    : Select a random Taylor Swift quote from a predefined list of quotes.
+import random
 #------------------------------------------------------------------------------------------
 def is_number(s):
     try:

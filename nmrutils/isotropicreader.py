@@ -223,6 +223,5 @@ def molecules_data(path1,path2):
         key_nmr_f.append((keys[1],k))
     if len(key_opt)!=1 : key_compare_all(key_opt,key_opt_f)
     if len(key_nmr)!=1 :key_compare_all(key_nmr,key_nmr_f)
-    sys.exit()
     return moleculeout,keys
 #------------------------------------------------FILTRAR

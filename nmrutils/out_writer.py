@@ -52,9 +52,7 @@ def kys_changes(lev):
     if "Def2SVP" in lev: lev=lev.replace("Def2SVP","def2-SVP") 
     lev=lev.replace("_","/")
     return lev
-
-
-#--------------------------------------------------- 
+#---------------------------------------------------
 
 def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr):
     os.chdir("..")
@@ -111,6 +109,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr)
 
 #---------------------------------------------------    
 def out_w(path,data,new,tbl_comp,keys):
+    print("jdjdjdjd")
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     xhh,xcc,yhh,ycc,cputime,cputime_nmr = xy(data,cputime,cputime_nmr)
@@ -138,8 +137,8 @@ def out_w(path,data,new,tbl_comp,keys):
     if key_opt == "-": key_opt=opt
     plot_name = str(path) +"/scaled_1H" +  ".png"     
     plotc_name =  str(path)+"/scaled_13C" +".png" 
-    splot(xhh,yhh,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","steelblue")
-    if len(xn_h) != 0:splot(xn_h,yn_h,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","salmon")
+    #splot(xhh,yhh,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","steelblue")
+    #if len(xn_h) != 0:splot(xn_h,yn_h,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","salmon")
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
@@ -225,6 +224,7 @@ def out_w(path,data,new,tbl_comp,keys):
         pph,ppc=[],[]
         rmsdh,rmsdc=0,0
         for imol in new:
+            print(imol.im,imol.i)
             out.write("------------------------------------\n")
             out.write("%s\n"%(imol.im))
             out.write("%s\n"%(imol.i))
@@ -261,8 +261,10 @@ def out_w(path,data,new,tbl_comp,keys):
             print("general rmsd of 13C:",rmsdc)
         if imol.chk==1: out.write("Chk: YES \n")
         if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]),rmsdh,rmsdc,cputime_n,cputime_nmr_n)
+    print("ddmmd")
     out.write("\n\n %s \n\n"%(Dr_TS())) #random phrasess
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
+    print("ddmmd")
     out.close
 
     return keys[0]
