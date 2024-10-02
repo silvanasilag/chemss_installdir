@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 #codigo con el calculo del python
 
@@ -19,6 +18,9 @@ from nmrutils.regression import scale,stat,splot,xy
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
+from nmrutils.table_ngbh import tabla_alldataset
+from glomos_utils.atomic import Dr_TS
+
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -41,7 +43,6 @@ opt = read_block_of_inp('gaussian opt') #
 cola = get_a_str('queue','qintel') #
 nproc = get_a_int('nodes',4) #
 
-
 def kys_changes(lev):
     if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
     if "TPSSTPSS" in lev: lev=lev.replace("TPSSTPSS","TPSS")
@@ -51,9 +52,7 @@ def kys_changes(lev):
     if "Def2SVP" in lev: lev=lev.replace("Def2SVP","def2-SVP") 
     lev=lev.replace("_","/")
     return lev
-
-
-#--------------------------------------------------- 
+#---------------------------------------------------
 
 def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr):
     os.chdir("..")
@@ -110,6 +109,7 @@ def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr)
 
 #---------------------------------------------------    
 def out_w(path,data,new,tbl_comp,keys):
+    print("jdjdjdjd")
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     xhh,xcc,yhh,ycc,cputime,cputime_nmr = xy(data,cputime,cputime_nmr)
@@ -137,8 +137,8 @@ def out_w(path,data,new,tbl_comp,keys):
     if key_opt == "-": key_opt=opt
     plot_name = str(path) +"/scaled_1H" +  ".png"     
     plotc_name =  str(path)+"/scaled_13C" +".png" 
-# splot(xhh,yhh,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","steelblue")
-#if len(xn_h) != 0:splot(xn_h,yn_h,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","salmon")
+    #splot(xhh,yhh,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","steelblue")
+    #if len(xn_h) != 0:splot(xn_h,yn_h,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","salmon")
     plt.clf()
     splot(xcc,ycc,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","steelblue")
     if len(xn_h) != 0:splot(xn_c,yn_c,plotc_name,data_c.m,data_c.b,data_c.r2,"Carbono-13","salmon")
@@ -229,9 +229,11 @@ def out_w(path,data,new,tbl_comp,keys):
             out.write("%s\n"%(imol.i))
             ph,pc=[],[]
             for iatom in imol.atoms:
+                print(":s:",imol.im, imol.i)
                 symbol= iatom.s
                 if symbol == "H":
                     out.write("%-5s %-30s" %(iatom.s,iatom.nz))
+                    print(iatom.s,iatom.nz)
                     out.write('{0:-18.4} {1:16.2f} {2:-17.2f} {3:-18.4f} \n'.format(iatom.t, iatom.e, iatom.c, iatom.r))
                     ph.append((iatom.r))
                     pph.append((iatom.r))
@@ -260,8 +262,10 @@ def out_w(path,data,new,tbl_comp,keys):
             print("general rmsd of 13C:",rmsdc)
         if imol.chk==1: out.write("Chk: YES \n")
         if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]),rmsdh,rmsdc,cputime_n,cputime_nmr_n)
-    out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
+    print("ddmmd")
+    out.write("\n\n %s \n\n"%(Dr_TS())) #random phrasess
     out.write("**** Don't get amxiaty, there was no problem whatsoever ****\n")
-    out.close
+    print("ddmmd")
+#    out.close
 
     return keys[0]
