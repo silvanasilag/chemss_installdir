@@ -4,24 +4,42 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_16_01_24_17_23__Changes_1.xml" beforeDir="false" />
+    <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="ya arreglamos los pobemas del print, no sabemos que era pero lo arreglamos cambiando el open con un with.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chemss.py" beforeDir="false" afterPath="$PROJECT_DIR$/chemss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="merge-conctiv-regressio" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="fec2f00c-bedb-40cd-831a-96836d4d04d7" />
+        <option name="url" value="https://github.com/silvanasilag/chemss_installdir.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/chemss.py" root0="SKIP_INSPECTION" />
@@ -30,36 +48,25 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
   <component name="ProjectId" id="2ZQ6tX8umrse3taGgNBo6fHxiZM" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.chemss.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.regression-bias.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/silvana/installdir/chemss_installdir&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;
-  }
-}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/nmrutils" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.chemss">
     <configuration name="chemss" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="chemss_installdir" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="$USER_HOME$/opt/anaconda3" />
       <option name="WORKING_DIRECTORY" value="$USER_HOME$/Desktop/test_chems" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -75,14 +82,12 @@
     </configuration>
     <configuration name="regression-bias" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="chemss_installdir" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="$USER_HOME$/opt/anaconda3" />
       <option name="WORKING_DIRECTORY" value="$USER_HOME$/Library/CloudStorage/OneDrive-CINVESTAV/art-chems/CHEMMS-ML" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -113,6 +118,30 @@
       <option name="presentableId" value="Default" />
       <updated>1702342170978</updated>
     </task>
+    <task id="LOCAL-00001" summary="listo el problema de los iops (prar todos los casos)">
+      <option name="closed" value="true" />
+      <created>1727111285720</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727111285720</updated>
+    </task>
+    <task id="LOCAL-00002" summary="listo el problema de los iops (prar todos los casos)">
+      <option name="closed" value="true" />
+      <created>1727316726115</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727316726115</updated>
+    </task>
+    <task id="LOCAL-00003" summary="ya arreglamos los pobemas del print, no sabemos que era pero lo arreglamos cambiando el open con un with.">
+      <created>1727974357219</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727974357219</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -125,5 +154,12 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ya quedo la extraccion de vecinos y reducir las utilidades de glomos" />
+    <MESSAGE value="listo el problema de los iops (prar todos los casos)" />
+    <MESSAGE value="ya arreglamos los pobemas del print, no sabemos que era pero lo arreglamos cambiando el open con un with." />
+    <option name="LAST_COMMIT_MESSAGE" value="ya arreglamos los pobemas del print, no sabemos que era pero lo arreglamos cambiando el open con un with." />
   </component>
 </project>
