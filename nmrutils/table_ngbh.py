@@ -65,8 +65,6 @@ def tabla_alldataset(name, data):
                 else: 
                     sys.exit(nbs)
             out.write('\n'+iatom.nz+" "+iatom.s+" : "+str(iatom.nb)+"  s:"+str(frec.get('single', 0))+"  d:"+str(frec.get('doble', 0))+"  t:"+str(frec.get('triple', 0)))
-            #out.write('{0: >-18.4}{1: >16.2}{2: >-17.2}{3: >-18.4}{4: >-18.4}\n'.format(imol.i,iatom.nz,frec.get('single', 0),frec.get('doble', 0),frec.get('triple', 0)))
-            #out.write('{0:-18.4s}{1:16.2s}{2:-17.2s}{3:-18.4s}{4:-18.4s}\n'.format(imol.i,iatom.nz,frec.get('single', 0),frec.get('doble', 0),frec.get('triple', 0)))
 
             df_1 = {
                 "Z": s,

@@ -20,6 +20,7 @@ from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
 from glomos_utils.atomic import Dr_TS
+from table_ngbh import tabla_alldataset
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -52,9 +53,7 @@ def kys_changes(lev):
     if "Def2SVP" in lev: lev=lev.replace("Def2SVP","def2-SVP") 
     lev=lev.replace("_","/")
     return lev
-
-
-#--------------------------------------------------- 
+#---------------------------------------------------
 
 def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr):
     os.chdir("..")
@@ -115,6 +114,7 @@ def out_w(path,data,new,tbl_comp,keys):
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     xhh,xcc,yhh,ycc,cputime,cputime_nmr = xy(data,cputime,cputime_nmr)
     #----------------------------------------------------
+    tabla_alldataset("test",data)
     data_h =DataNMR("H", 0, 0, 0, 0)
     data_c =DataNMR("C", 0, 0, 0, 0) 
     print ("\n----Data for 1H-----")

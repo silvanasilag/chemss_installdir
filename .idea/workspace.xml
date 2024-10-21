@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ffb0b198-3f7c-4949-9aab-04186a2085ee" name="Changes" comment="ya arreglamos los pobemas del print, no sabemos que era pero lo arreglamos cambiando el open con un with.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dnmr/datos_xy.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nmrutils/out_writer copy.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/glomos_utils/atomic.py" beforeDir="false" afterPath="$PROJECT_DIR$/glomos_utils/atomic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nmrutils/out_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/out_writer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nmrutils/regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/regression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nmrutils/table_ngbh.py" beforeDir="false" afterPath="$PROJECT_DIR$/nmrutils/table_ngbh.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +32,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="conectividad" />
+        <entry key="$PROJECT_DIR$" value="merge-conctiv-regressio" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

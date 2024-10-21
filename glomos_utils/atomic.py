@@ -657,7 +657,7 @@ def Dr_TS():
         "Sweet like honey, karma is a cat – Karma.",
         "I love you, it’s ruining my life – Fortnight.",
         "Everything comes out teenage petulance – Down Bad.",
-        "We gather stones, never knowing what they'll mean – My Tears Ricochet.",
+        "We gather stones, never knowing what they'll mean, Some to throw, some to make a diamond ring – My Tears Ricochet.",
         "Cause when I'd fight, you used to tell me I was brave – My Tears Ricochet."
     ]
 
