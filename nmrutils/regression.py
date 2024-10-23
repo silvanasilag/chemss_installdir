@@ -3,6 +3,7 @@
 
 ##modulos
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 import os
@@ -20,23 +21,81 @@ class DataNMR:
         self.r2=r_squere
         self.rmsd=rmsd
 
-#--------------------------------------------------- 
-def xy(data,cputime,cputime_nmr):
-    xn_h,xn_c,yn_h,yn_c=[],[],[],[]
+#---------------------------------------------------
+def xy(df,n):
+    dfn = df[df['Z'] == n]
+    x = list(dfn['Chemical Shift'])
+    y = list(dfn['Isotropic Values'])
+    return x,y
+def df_dataset(data,cputime,cputime_nmr):
+    atoms_vecinos = []
     for imol in data:
-        timecpu =   timedelta(days=int(imol.ct[0]),hours=int(imol.ct[1]), minutes=int(imol.ct[2]), seconds=round(float(imol.ct[3])))
-        timecpu_nmr=timedelta(days=int(imol.ct_nmr[0]),hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]), seconds=round(float(imol.ct_nmr[3])))
-        cputime= timecpu+cputime
-        cputime_nmr= timecpu_nmr+cputime_nmr
+        timecpu = timedelta(days=int(imol.ct[0]), hours=int(imol.ct[1]), minutes=int(imol.ct[2]),seconds=round(float(imol.ct[3])))
+        timecpu_nmr = timedelta(days=int(imol.ct_nmr[0]), hours=int(imol.ct_nmr[1]), minutes=int(imol.ct_nmr[2]),seconds=round(float(imol.ct_nmr[3])))
+        cputime = timecpu + cputime
+        cputime_nmr = timecpu_nmr + cputime_nmr
         for iatom in imol.atoms:
-            symbol= iatom.s
-            if symbol == "H":
-                xn_h.append(iatom.e)
-                yn_h.append(iatom.t)
-            if symbol == "C":
-                xn_c.append(iatom.e)
-                yn_c.append(iatom.t)
-    return xn_h,xn_c,yn_h,yn_c,cputime,cputime_nmr
+            nbs=iatom.nb
+            for n in nbs:
+                atoms_vecinos.append(n)
+    nb=list(set(atoms_vecinos))
+    print("Atomos vecinoss",nb)
+    dic_df = {
+        "Z": [],
+        "Isotropic Values": [],
+        "Chemical Shift": [],
+        "Single": [],
+        "Dobles": [],
+        "Triple": []
+    }
+    for elemento in atoms_vecinos:
+        dic_df[f"{elemento}-"] = []
+    df1 = pd.DataFrame(dic_df)
+    for imol in data:
+        for iatom in imol.atoms:
+            if not (iatom.s == 'H' or iatom.s == 'C'):
+                print(imol.im,imol.i,iatom.s,iatom.t,iatom.e)
+                print("PANICO SATANICOOO",iatom.s )
+            nbs=iatom.nb
+            frec={} # Diccionario para contar la frecuencias
+            for i in nbs:
+                if i in frec:
+                    frec[i]+= int(1)
+                else:
+                    frec[i]= int(1)
+            if iatom.s=='H':
+                if iatom.t  == 681.3693:print("AHHHHHHH!!!!---------------------------------11-")
+                s=1
+                frec["single"]=int(1)
+                if len(nbs)!=1:
+                    sys.exit(nbs)
+            if iatom.s=='C':
+                if iatom.t  == 681.3693:print("AHHHHHHH!!!!---------------------------------2-")
+                s=6
+                if len(nbs)==4:
+                    frec["single"]=int(4)
+                elif len(nbs)==3:
+                    frec["doble"]=int(1)
+                    frec["single"]=int(2)
+                elif len(nbs)==2:
+                    frec["triple"]=int(1)
+                    frec["single"]=int(1)
+                else:
+                    sys.exit(nbs)
+            #out.write('\n'+iatom.nz+" "+iatom.s+" : "+str(iatom.nb)+"  s:"+str(frec.get('single', 0))+"  d:"+str(frec.get('doble', 0))+"  t:"+str(frec.get('triple', 0)))
+            df_1 = {
+                "Z": s,
+                "Isotropic Values": iatom.t,
+                "Chemical Shift": iatom.e,
+                "Single": frec.get('single', 0),
+                "Dobles": frec.get('doble', 0),
+                "Triple": frec.get('triple', 0)
+            }
+            for elemento in atoms_vecinos:
+                df_1[f"{elemento}-"] = frec.get(elemento, 0)
+            df_2 = pd.DataFrame([df_1]) # Crear un nuevo DataFrame con los nuevos datos
+            df1 = pd.concat([df1, df_2], ignore_index=True) # Concatenar el nuevo DataFrame con el DataFrame existente
+    return df1,cputime,cputime_nmr
 #--------------------------------------------------- 
 def stat(x,y,data):
     #-----------------------------------create cvs 

@@ -122,10 +122,10 @@ def CHEMSS():
         data,keys= molecules_data(path,dnmr)
         data2,keys = molecules_data(path2,str(work_dir+"/nw_ds"))
         # key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
-        key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
+        # key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
-        # data3=data+data2
-        # key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
+        data3=data+data2
+        key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
         if stat == 'YES':  out_w(path,data,[],tbl_comp,keys)
         """
         if key_opt != key_opt_n : 

@@ -12,22 +12,19 @@ import random
 import glob
 import pandas as pd
 import re
-
 from scipy import stats
 from nmrutils.terminacion import from_reader
-from nmrutils.regression import scale,stat,splot,xy
+from nmrutils.regression import scale,stat,splot,xy,df_dataset
 from sklearn.metrics import mean_squared_error
 from nmrutils.isotropicreader import molecules_data
 from nmrutils.getbilparam import get_a_str, read_block_of_inp, get_a_int, get_a_float,key_norm
 from glomos_utils.atomic import Dr_TS
-from table_ngbh import tabla_alldataset
 
 def fechayhora():
     months=["Jan","Feb","March","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     now = dt.now()
     mon=months[now.month-1]
     noww=str(now.day)+"-"+mon+"-"+str(now.year)+"   "+str(now.hour)+":"+str(now.minute)+":"+str(now.second)
-    
     return noww
 #--------------------------------------------------- 
 class DataNMR:
@@ -37,13 +34,10 @@ class DataNMR:
         self.b=intercept
         self.r2=r_squere
         self.rmsd=rmsd
-
 nmr = read_block_of_inp('gaussian nmr') #
 opt = read_block_of_inp('gaussian opt') #
 cola = get_a_str('queue','qintel') #
 nproc = get_a_int('nodes',4) #
-
-
 def kys_changes(lev):
     if "PBE1PBE" in lev: lev=lev.replace("PBE1PBE","PBE0") 
     if "TPSSTPSS" in lev: lev=lev.replace("TPSSTPSS","TPSS")
@@ -54,7 +48,6 @@ def kys_changes(lev):
     lev=lev.replace("_","/")
     return lev
 #---------------------------------------------------
-
 def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr):
     os.chdir("..")
     # print(os.getcwd())
@@ -112,13 +105,15 @@ def comp_table(tbl_comp,data_c,data_h,keys,path,rmsdh,rmsdc,timecpu,timecpu_nmr)
 def out_w(path,data,new,tbl_comp,keys):
     cputime=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
-    xhh,xcc,yhh,ycc,cputime,cputime_nmr = xy(data,cputime,cputime_nmr)
+    df,cputime,cputime_nmr=df_dataset(data,cputime,cputime_nmr)
     #----------------------------------------------------
-    tabla_alldataset("test",data)
+    xhh,yhh=xy(df,1)
+    xcc,ycc=xy(df,6)
     data_h =DataNMR("H", 0, 0, 0, 0)
-    data_c =DataNMR("C", 0, 0, 0, 0) 
-    print ("\n----Data for 1H-----")
-    stat(xhh,yhh,data_h)
+    data_c =DataNMR("C", 0, 0, 0, 0)
+    if len(xhh)>1:
+        print ("\n----Data for 1H-----")
+        stat(xhh,yhh,data_h)
     print ("----Data for 13C----")
     stat(xcc,ycc,data_c)
     scale(data,data_h,data_c)
@@ -166,33 +161,33 @@ def out_w(path,data,new,tbl_comp,keys):
         out.write("------------------------------------------------------------------------------------------------\n")
         out.write("The Geometry optimization and the isotropic shielding constants were computed using Gaussian G16\n")
         out.write("------------------------------------------------------------------------------------------------\n")
-        out.write("{:<24}{:>47}\n".format("Geometry OPT","NMR"))                  #Datos a extraer del out
+        out.write("{:<24}{:>47}\n".format("Geometry OPT","NMR"))
         out.write("------------------------------------------------------------------------------------------------\n")
         out.write("{:<47s}{:>24s}\n".format(str(key_opt),str(key_nmr)))
         out.write("\n\n||*********************Data for 1H******************||\n\n")
-        out.write("Scaling Factors 1H           \n") #Datos a extraer del out
+        out.write("Scaling Factors 1H           \n")
         out.write("------------------\n")
         out.write('{0:5} {1:10} \n'.format("slope","     intercept"))
         out.write("------------------\n")
         out.write('{0:5.4f} {1:-10.4f}\n\n'.format(data_h.m, data_h.b))
-        out.write("Performance     1H                \n") #Datos a extraer del out
+        out.write("Performance     1H                \n")
         out.write("------------------\n")
         out.write('{0:5} {1:10} \n'.format("RMSD", "     R^2"))
         out.write("----------------- \n")
         out.write('{0:5.4f} {1:-10.4f} \n'.format(data_h.rmsd,data_h.r2))
         out.write("\n\n||*********************Data for 13C******************|| \n\n")
-        out.write("Scaling Factors 13C\n") #Datos a extraer del out
+        out.write("Scaling Factors 13C\n")
         out.write("-----------------\n")
         out.write('{0:5} {1:10} \n'.format("slope","     intercept"))
         out.write("------------------ \n")
         out.write('{0:5.4f} {1:-10.4f} \n\n'.format(data_c.m, data_c.b))
-        out.write("Performance   13C\n") #Datos a extraer del out
+        out.write("Performance   13C\n")
         out.write("-----------------\n")
         out.write('{0:5} {1:10} \n'.format("RMSD", "     R^2"))
         out.write("----------------- \n")
         out.write('{0:5.4f} {1:-10.4f} \n'.format(data_c.rmsd,data_c.r2))
         out.write("\n\n|******************************************|\n")
-        out.write("|                Test Set Results          |\n") #Datos a extraer del out
+        out.write("|                Test Set Results          |\n")
         out.write("|******************************************|\n")
         out.write("Name                                         Isotropic Values    Exp.Values    Shift Value(scaled)    Residual^2 \n")
         if len(new)==0:
@@ -260,10 +255,8 @@ def out_w(path,data,new,tbl_comp,keys):
                 print("general rmsd of 13C:",rmsdc)
             if imol.chk==1: out.write("Chk: YES \n")
             if tbl_comp != "-": comp_table(tbl_comp,data_c,data_h,keys,str(path.split('/')[-1]),rmsdh,rmsdc,cputime_n,cputime_nmr_n)
-
-#        out.write("\n\nThat might sound boring, but I think the boring stuff is the stuff I remember the most\n\n")
-        out.write("\n\n" + Dr_TS() + "\n\n")
+        dts=Dr_TS()
+        print(dts)
+        out.write("\n\n" + dts + "\n\n")
         out.write("**** Don't get amxiaty, there was no problem whatsoever ")
-
-
     return keys[0]
