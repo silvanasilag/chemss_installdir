@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 import os
+import sys
 
 from scipy import stats
 from sklearn.metrics import mean_squared_error
@@ -22,10 +23,45 @@ class DataNMR:
         self.rmsd=rmsd
 
 #---------------------------------------------------
-def xy(df,n):
+def bias(element,all_df,data):
+    print(all_df)
+    z = str(element + '-')
+    df = all_df[all_df[z] > 0]
+    x = list(df['Chemical Shift'])
+    y = list(df['Isotropic Values'])
+    xscal = []
+    n, p = 0, 0
+    b = data.b
+    for i in range(len(y)):
+        xs = (y[i] - b) / data.m
+        xscal.append(xs)
+        p, n = (p + 1, n) if xs > x[i] else (p, n + 1)
+    rmsd = (mean_squared_error(x, xscal)) ** 0.5
+    print("Scale RMSD", z, "=", rmsd)
+    c = -0.05 if p > n else 0.05
+    while True:
+        bi=b
+        xscal = []
+        b = b + c
+        for i in range(len(y)):
+            xs = (y[i] - b) / data.m
+            xscal.append(xs)
+        rmsd_n = (mean_squared_error(x, xscal)) ** 0.5
+        #print("Scale RMSD", z, "=", rmsd_n,b)
+        if rmsd_n > rmsd:
+            print("The minimals is Scale RMSD", z, "=", rmsd,bi)
+            break
+        else:
+            rmsd = rmsd_n
+    return bi
+
+def xy(df,n,f):
     dfn = df[df['Z'] == n]
     x = list(dfn['Chemical Shift'])
-    y = list(dfn['Isotropic Values'])
+    if f=="y":
+        y = list(dfn['Isotropic Values'])
+    if f=="yc":
+        y = list(dfn['Scale_Shift'])
     return x,y
 def df_dataset(data,cputime,cputime_nmr):
     atoms_vecinos = []
@@ -63,7 +99,7 @@ def df_dataset(data,cputime,cputime_nmr):
                     frec[i]+= int(1)
                 else:
                     frec[i]= int(1)
-            if iatom.s=='H':
+            if iatom.s=='H': #hay que borrar esto probablemente
                 if iatom.t  == 681.3693:print("AHHHHHHH!!!!---------------------------------11-")
                 s=1
                 frec["single"]=int(1)
@@ -95,32 +131,33 @@ def df_dataset(data,cputime,cputime_nmr):
                 df_1[f"{elemento}-"] = frec.get(elemento, 0)
             df_2 = pd.DataFrame([df_1]) # Crear un nuevo DataFrame con los nuevos datos
             df1 = pd.concat([df1, df_2], ignore_index=True) # Concatenar el nuevo DataFrame con el DataFrame existente
+
     return df1,cputime,cputime_nmr
 #--------------------------------------------------- 
 def stat(x,y,data):
-    #-----------------------------------create cvs 
-    datos = list(zip(x, y))
-    ruta_archivo = "datos_xy.csv"
-    with open(ruta_archivo, 'w', newline='') as archivo_csv:
-    # Crear un objeto escritor CSV
-        escritor_csv = csv.writer(archivo_csv)
-    # Escribir los datos en el archivo CSV
-        escritor_csv.writerow(["Chemical Shift", "Isotropic Values"])  # Escribir encabezados
-        escritor_csv.writerows(datos)
-    #-----------------------------------create cvs 
     yscal = []
-    
     print("largo de los datos",len(x))
     data.m, data.b, r_value, p_value, std_err = stats.linregress(x, y)
     data.r2 = r_value**2
+    #------------------------
     for i in range(len(y)):
         ys = (data.b - y[i])/-data.m
         yscal.append(ys)
     data.rmsd = (mean_squared_error(x,yscal))**0.5
     print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))
     return data
-#--------------------------------------------------- 
-def scale(data, data_h,data_c):
+#---------------------------------------------------
+def scale(data,data_h,data_c,df):
+    resl=[]
+    '''
+
+    :param data: Molecules out
+    :param data_h: stadistic  informacion from the regression of the 1H chimical shift vs isotropic value
+    :param data_c:  stadistic  informacion from the regression of the 13C chimical shift vs isotropic value
+    :param df:
+    :return:
+    '''
+    dir_bias={}
     for imol in data:
         for iatom in imol.atoms:
             symbol= iatom.s
@@ -130,10 +167,19 @@ def scale(data, data_h,data_c):
                 iatom.r =res
                 iatom.c =ys
             if symbol == "C":
-                yc = (data_c.b - iatom.t)/-data_c.m
+                b=data_c.b
+                for element in iatom.nb:
+                    if element not in ["H", "C"]:
+                        if element not in dir_bias:
+                            dir_bias[element]=bias(element,df,data_c)
+                        b = dir_bias[element]
+                yc = (b - iatom.t)/-data_c.m
                 res = (abs(iatom.e-yc))**2
                 iatom.r =res
                 iatom.c =yc
+            resl.append(iatom.c)
+    df.loc[:, "Scale_Shift"]=resl
+    return dir_bias,df
 #--------------------------------------------------- 
 def splot(x, y,fname,slope,inter,r2,name,clr):
     c = []

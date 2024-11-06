@@ -107,23 +107,27 @@ def out_w(path,data,new,tbl_comp,keys):
     cputime_nmr=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
     df,cputime,cputime_nmr=df_dataset(data,cputime,cputime_nmr)
     #----------------------------------------------------
-    xhh,yhh=xy(df,1)
-    xcc,ycc=xy(df,6)
+    xhh,yhh=xy(df,1,"y")
+    xcc,ycc=xy(df,6,"y")
     data_h =DataNMR("H", 0, 0, 0, 0)
     data_c =DataNMR("C", 0, 0, 0, 0)
     if len(xhh)>1:
-        print ("\n----Data for 1H-----")
+        print ("\n---- Data for 1H-----")
         stat(xhh,yhh,data_h)
     print ("----Data for 13C----")
     stat(xcc,ycc,data_c)
-    scale(data,data_h,data_c)
+    dir_bias,df=scale(data,data_h,data_c,df)
+    df.to_csv(str(path)+'/borrar_test.csv', index=False)
+    xcc,ycc=xy(df,6,"yc")
+    rmsd = np.sqrt(np.mean((np.array(xcc) - np.array(ycc)) ** 2))
+    print("NEW RMSD:",rmsd)
     #---------------------------------------------------------
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     if len(new) != 0:
         cputime_n=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
         cputime_nmr_n=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
         scale(new, data_h, data_c)
-        xhh,xcc,yhh,ycc,cputime_n,cputime_nmr_n = xy(new,cputime_n,cputime_nmr_n)
+        df,cputime,cputime_nmr=df_dataset(new,cputime,cputime_nmr)
     #---------------------------------------------------Escribe los  archivos out finales     
     os.chdir(path)
     out=(glob.glob("*.out"))
@@ -132,7 +136,7 @@ def out_w(path,data,new,tbl_comp,keys):
     keys=[key_norm(key_opt,"OPT"),key_norm(key_nmr,"NMR")]
     if key_opt == "-": key_opt=opt
     plot_name = str(path) +"/scaled_1H" +  ".png"     
-    plotc_name =  str(path)+"/scaled_13C" +".png" 
+    plotc_name =  str(path)+"/scaled_13C" +".png"
 # splot(xhh,yhh,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","steelblue")
 #if len(xn_h) != 0:splot(xn_h,yn_h,plot_name,data_h.m,data_h.b,data_h.r2,"Hidrogeno-1","salmon")
     plt.clf()

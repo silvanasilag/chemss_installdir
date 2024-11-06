@@ -106,7 +106,6 @@ def CHEMSS():
         send_pbs_files_to_queue(njobs, time_sleep)
         #----------------------------------------------
     if stat == 'YES' and new_mol =="NO":
-
         exist(path,False)
         #falla,error,keys = terminacion(path)
         data,keys = molecules_data(path,dnmr)
@@ -119,21 +118,19 @@ def CHEMSS():
         # falla,error,opt,nmr = terminacion(path)
         #falla,error,keys= terminacion(path2)
         keys=["-","-"]
+        keys2= ["-", "-"]
         data,keys= molecules_data(path,dnmr)
-        data2,keys = molecules_data(path2,str(work_dir+"/nw_ds"))
+        data2,keys2 = molecules_data(path2,str(work_dir+"/nw_ds"))
+        if keys != keys2 :
+            print("Diferent keywords in the files: \n")
+            print(path,keys)
+            print(path2,keys2)
         # key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
         # key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
         data3=data+data2
-        key_opt_n=out_w(path2,data3,data,tbl_comp) #scale factor perform with the base dataset + the new data
+        key_opt_n=out_w(path2,data3,data,tbl_comp,keys) #scale factor perform with the base dataset + the new data
         if stat == 'YES':  out_w(path,data,[],tbl_comp,keys)
-        """
-        if key_opt != key_opt_n : 
-            print("Not the same level of theory")
-            print(path+"    :   "+key_opt)
-            print(path2+"   :  "+key_opt_n)
-            sys.exit("")
-        """
         #chk_files(key_opt,path,1)
         chk_files(key_opt_n,path2,0)
     # ·····························································
