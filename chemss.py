@@ -125,12 +125,12 @@ def CHEMSS():
             print("Diferent keywords in the files: \n")
             print(path,keys)
             print(path2,keys2)
-        # key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
-        # key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
+        #key_opt_n=out_w(path2,data2,[],tbl_comp,keys)   #scale factor perform with just the new data
+        key_opt_n=out_w(path2,data,data2,tbl_comp,keys) #scale factor perform with just the base dataset
         # key_opt_n=out_w(path2,data2,data,tbl_comp) #scale factor aplaided to base dataset performed with just the new data 
-        data3=data+data2
-        key_opt_n=out_w(path2,data3,data,tbl_comp,keys) #scale factor perform with the base dataset + the new data
-        if stat == 'YES':  out_w(path,data,[],tbl_comp,keys)
+        #data3=data+data2
+        #key_opt_n=out_w(path2,data3,data2,tbl_comp,keys) #scale factor perform with the base dataset + the new data
+        #if stat == 'YES':  out_w(path,data,[],tbl_comp,keys)
         #chk_files(key_opt,path,1)
         chk_files(key_opt_n,path2,0)
     # ·····························································

@@ -116,19 +116,33 @@ def out_w(path,data,new,tbl_comp,keys):
         stat(xhh,yhh,data_h)
     print ("----Data for 13C----")
     stat(xcc,ycc,data_c)
-    dir_bias,df=scale(data,data_h,data_c,df)
-    df.to_csv(str(path)+'/borrar_test.csv', index=False)
+    dir_bias,df=scale(data,data_h,data_c,df,{})
+    # ---------------------------------------------------------
+    dfc = df[df['Z'] == 6]
+    dfh = df[df['Z'] == 1]
+    #dfc.to_csv(str(path)+'/cdata.csv', index=False)
+    #dfh.to_csv(str(path)+'/hdata.csv', index=False)
     xcc,ycc=xy(df,6,"yc")
     rmsd = np.sqrt(np.mean((np.array(xcc) - np.array(ycc)) ** 2))
     print("NEW RMSD:",rmsd)
+
     #---------------------------------------------------------
     xn_h,xn_c,yn_h,yn_c=[],[],[],[]
     if len(new) != 0:
         cputime_n=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
         cputime_nmr_n=datetime.timedelta(days=int(0),hours=int(0), minutes=int(0), seconds=round(float(0),2))
-        scale(new, data_h, data_c)
-        df,cputime,cputime_nmr=df_dataset(new,cputime,cputime_nmr)
-    #---------------------------------------------------Escribe los  archivos out finales     
+        dfn, cputime, cputime_nmr = df_dataset(new, cputime, cputime_nmr)
+        dir_biasn, dfn = scale(new, data_h, data_c, dfn,dir_bias)
+        # ---------------------------------------------------------
+        dfnc = dfn[dfn['Z'] == 6]
+        dfnh = dfn[dfn['Z'] == 1]
+        dfnc.to_csv(str(path) + '/cdata.csv', index=False)
+        dfnh.to_csv(str(path) + '/hdata.csv', index=False)
+        xccn, yccn = xy(dfn, 6, "yc")
+        rmsdn = np.sqrt(np.mean((np.array(xccn) - np.array(yccn)) ** 2))
+        print("NEW RMSD-cloros:", rmsdn)
+
+    #---------------------------------------------------Escribe los  archivos out finales
     os.chdir(path)
     out=(glob.glob("*.out"))
     key_opt=keys[0]
@@ -165,9 +179,9 @@ def out_w(path,data,new,tbl_comp,keys):
         out.write("------------------------------------------------------------------------------------------------\n")
         out.write("The Geometry optimization and the isotropic shielding constants were computed using Gaussian G16\n")
         out.write("------------------------------------------------------------------------------------------------\n")
-        out.write("{:<24}{:>47}\n".format("Geometry OPT","NMR"))
+        out.write("{:<24}{:>30}\n\n".format("Geometry OPT:",str(key_opt)))
+        out.write("{:<24}{:>30}\n".format("NMR:",str(key_nmr)))
         out.write("------------------------------------------------------------------------------------------------\n")
-        out.write("{:<47s}{:>24s}\n".format(str(key_opt),str(key_nmr)))
         out.write("\n\n||*********************Data for 1H******************||\n\n")
         out.write("Scaling Factors 1H           \n")
         out.write("------------------\n")

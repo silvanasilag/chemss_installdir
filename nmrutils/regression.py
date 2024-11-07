@@ -24,11 +24,11 @@ class DataNMR:
 
 #---------------------------------------------------
 def bias(element,all_df,data):
-    print(all_df)
     z = str(element + '-')
     df = all_df[all_df[z] > 0]
     x = list(df['Chemical Shift'])
     y = list(df['Isotropic Values'])
+    print(z,"---------leng data---------",len(y))
     xscal = []
     n, p = 0, 0
     b = data.b
@@ -147,7 +147,7 @@ def stat(x,y,data):
     print("slope: %.4f  \nintercept:%.4f   \nrmsd: %.4f    \nR**2:%.4f \n" % (data.m, data.b,data.rmsd,data.r2))
     return data
 #---------------------------------------------------
-def scale(data,data_h,data_c,df):
+def scale(data,data_h,data_c,df,dir_bias):
     resl=[]
     '''
 
@@ -157,7 +157,6 @@ def scale(data,data_h,data_c,df):
     :param df:
     :return:
     '''
-    dir_bias={}
     for imol in data:
         for iatom in imol.atoms:
             symbol= iatom.s
